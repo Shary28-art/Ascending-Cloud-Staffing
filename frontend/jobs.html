@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find cloud, technology, software, DevOps and cybersecurity jobs with Ascending Cloud Staffing.">
+    <title>Find Jobs | Ascending Cloud Staffing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+    <div id="siteNav"></div>
+
+    <main id="mainContent">
+        <section class="jobs-hero">
+            <div class="container">
+                <span class="eyebrow">CAREER OPPORTUNITIES</span>
+                <h1>Find your next <span>cloud opportunity.</span></h1>
+                <p>
+                    Explore technology and cloud staffing opportunities across AWS, Azure,
+                    GCP, DevOps, cybersecurity and modern digital roles.
+                </p>
+            </div>
+        </section>
+
+        <section class="job-search-section">
+            <div class="container">
+                <form id="jobSearchForm" class="job-search-box">
+                    <div class="search-field">
+                        <label for="keyword">Keyword</label>
+                        <input
+                            type="search"
+                            id="keyword"
+                            placeholder="Job title, skill or technology"
+                            autocomplete="off">
+                    </div>
+
+                    <div class="search-field">
+                        <label for="location">Location</label>
+                        <input
+                            type="search"
+                            id="location"
+                            placeholder="City, state or remote"
+                            autocomplete="off">
+                    </div>
+
+                    <button class="btn search-btn" type="submit">
+                        Find Jobs
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="jobs-section">
+            <div class="container jobs-layout">
+                <aside class="filters" aria-label="Job filters">
+                    <div class="filter-header">
+                        <h3>Filters</h3>
+                        <button type="button" id="clearFiltersBtn">Clear</button>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Cloud Platform</h4>
+                        <label>
+                            <input type="radio" name="platform" value="all" checked>
+                            All Platforms
+                        </label>
+                        <label>
+                            <input type="radio" name="platform" value="AWS">
+                            AWS
+                        </label>
+                        <label>
+                            <input type="radio" name="platform" value="Azure">
+                            Azure
+                        </label>
+                        <label>
+                            <input type="radio" name="platform" value="GCP">
+                            GCP
+                        </label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Employment Type</h4>
+                        <label>
+                            <input type="radio" name="jobType" value="all" checked>
+                            All Types
+                        </label>
+                        <label>
+                            <input type="radio" name="jobType" value="Full-time">
+                            Full-time
+                        </label>
+                        <label>
+                            <input type="radio" name="jobType" value="Contract">
+                            Contract
+                        </label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Workplace</h4>
+                        <label>
+                            <input type="checkbox" name="workplace" value="Remote">
+                            Remote
+                        </label>
+                        <label>
+                            <input type="checkbox" name="workplace" value="Hybrid">
+                            Hybrid
+                        </label>
+                        <label>
+                            <input type="checkbox" name="workplace" value="On-site">
+                            On-site
+                        </label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Experience</h4>
+                        <label>
+                            <input type="checkbox" name="experience" value="Entry Level">
+                            Entry Level
+                        </label>
+                        <label>
+                            <input type="checkbox" name="experience" value="2+ Years">
+                            2+ Years
+                        </label>
+                        <label>
+                            <input type="checkbox" name="experience" value="3+ Years">
+                            3+ Years
+                        </label>
+                        <label>
+                            <input type="checkbox" name="experience" value="5+ Years">
+                            5+ Years
+                        </label>
+                    </div>
+                </aside>
+
+                <section class="jobs-main" aria-label="Job results">
+                    <div class="jobs-topbar">
+                        <div>
+                            <h2>Latest Opportunities</h2>
+                            <p id="jobResultCount">Loading jobs...</p>
+                        </div>
+
+                        <div class="sort-box">
+                            <label for="sort">Sort by</label>
+                            <select id="sort">
+                                <option value="latest">Most Recent</option>
+                                <option value="relevance">Relevance</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="jobList" class="job-list" aria-live="polite"></div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage saved jobs and applications from your Ascending Cloud candidate dashboard.">
+    <title>Candidate Dashboard | Ascending Cloud Staffing</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+    <div id="siteNav"></div>
+
+    <main id="mainContent" class="page">
+        <div class="container">
+            <div class="page-title">
+                <div>
+                    <h1>Candidate Dashboard</h1>
+                    <p class="muted">Welcome, <span id="dashboardUserName">User</span></p>
+                    <p class="muted" id="dashboardUserEmail"></p>
+                </div>
+                <button type="button" class="btn outline" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="layout">
+                <aside class="panel sidebar">
+                    <a href="dashboard.html" class="side-link active">Overview</a>
+                    <a href="../../jobs.html" class="side-link">Browse Jobs</a>
+                    <a href="../login.html" class="side-link">Account Settings</a>
+                </aside>
+
+                <section>
+                    <div class="stat-grid dashboard-stats">
+                        <div class="panel">
+                            <p class="muted">Saved Jobs</p>
+                            <p class="stat-number" id="savedJobCount">0</p>
+                        </div>
+                        <div class="panel">
+                            <p class="muted">Applications</p>
+                            <p class="stat-number">0</p>
+                        </div>
+                        <div class="panel">
+                            <p class="muted">Profile Status</p>
+                            <p class="stat-number"><span class="badge badge-success">Active</span></p>
+                        </div>
+                        <div class="panel">
+                            <p class="muted">Recommended</p>
+                            <p class="stat-number">3</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h2>Saved Jobs</h2>
+                        <div id="savedJobsList"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <div id="siteFooter"></div>
+
+    <script>
+        if (!localStorage.getItem("loggedIn")) {
+            window.location.href = "../login.html";
+        } else if (localStorage.getItem("userRole") !== "candidate") {
+            window.location.href = "../index.html";
+        }
+    </script>
+    <script src="../main.js"></script>
+</body>
+
+</html>
