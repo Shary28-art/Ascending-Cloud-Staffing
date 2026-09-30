@@ -1,28 +1,64 @@
 package com.ascendingcloud.staffing.controller;
 
 import com.ascendingcloud.staffing.entity.ExperienceLevel;
-import com.ascendingcloud.staffing.repository.ExperienceLevelRepository;
+import com.ascendingcloud.staffing.service.ExperienceLevelService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/experience-levels")
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "http://localhost:5174"
-})
+@RequestMapping("/api/experience-levels")
+@CrossOrigin(origins = "*")
 public class ExperienceLevelController {
 
-    private final ExperienceLevelRepository repository;
+    private final ExperienceLevelService experienceLevelService;
 
     public ExperienceLevelController(
-            ExperienceLevelRepository repository) {
-        this.repository = repository;
+            ExperienceLevelService experienceLevelService) {
+        this.experienceLevelService = experienceLevelService;
     }
 
     @GetMapping
-    public List<ExperienceLevel> getAll() {
-        return repository.findAll();
+    public ResponseEntity<List<ExperienceLevel>> getAllExperienceLevels() {
+        return ResponseEntity.ok(
+                experienceLevelService.getAllExperienceLevels()
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExperienceLevel> getExperienceLevelById(
+            @PathVariable Integer id) {
+        return ResponseEntity.ok(
+                experienceLevelService.getExperienceLevelById(id)
+        );
+    }
+
+    @PostMapping
+    public ResponseEntity<ExperienceLevel> createExperienceLevel(
+            @RequestBody ExperienceLevel experienceLevel) {
+        return ResponseEntity.ok(
+                experienceLevelService.createExperienceLevel(
+                        experienceLevel
+                )
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ExperienceLevel> updateExperienceLevel(
+            @PathVariable Integer id,
+            @RequestBody ExperienceLevel experienceLevel) {
+        return ResponseEntity.ok(
+                experienceLevelService.updateExperienceLevel(
+                        id, experienceLevel
+                )
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExperienceLevel(
+            @PathVariable Integer id) {
+        experienceLevelService.deleteExperienceLevel(id);
+        return ResponseEntity.noContent().build();
     }
 }
