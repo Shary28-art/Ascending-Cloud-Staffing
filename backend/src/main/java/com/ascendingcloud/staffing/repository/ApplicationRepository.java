@@ -9,7 +9,17 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
 
     boolean existsByJobIdAndCandidateId(Integer jobId, Integer candidateId);
 
+    List<Application> findAllByOrderByAppliedAtDesc();
+
     List<Application> findByCandidateIdOrderByAppliedAtDesc(Integer candidateId);
 
     List<Application> findByJobIdOrderByAppliedAtDesc(Integer jobId);
+
+    /** Used to decide whether an employer may see a candidate's resume. */
+    boolean existsByCandidateIdAndJobCompanyId(
+            Integer candidateId,
+            Integer companyId
+    );
+
+    List<Application> findByJobCompanyIdOrderByAppliedAtDesc(Integer companyId);
 }

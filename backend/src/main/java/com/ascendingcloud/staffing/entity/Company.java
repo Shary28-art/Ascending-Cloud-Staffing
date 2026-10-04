@@ -1,6 +1,7 @@
 package com.ascendingcloud.staffing.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,10 +24,35 @@ public class Company {
     @Column(length = 150)
     private String location;
 
+    @Column(length = 100)
+    private String industry;
+
+    @Column(name = "company_size", length = 50)
+    private String companySize;
+
+    @JsonIgnore
+    @Column(name = "logo_key", length = 500)
+    private String logoKey;
+
+    @JsonIgnore
+    @Column(name = "logo_content_type", length = 100)
+    private String logoContentType;
+
+    @JsonIgnore
+    @Column(name = "logo_file_size")
+    private Long logoFileSize;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public Company() {
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
     public Integer getId() {
@@ -69,11 +95,56 @@ public class Company {
         this.location = location;
     }
 
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getCompanySize() {
+        return companySize;
+    }
+
+    public void setCompanySize(String companySize) {
+        this.companySize = companySize;
+    }
+
+    public String getLogoKey() {
+        return logoKey;
+    }
+
+    public void setLogoKey(String logoKey) {
+        this.logoKey = logoKey;
+    }
+
+    public String getLogoContentType() {
+        return logoContentType;
+    }
+
+    public void setLogoContentType(String logoContentType) {
+        this.logoContentType = logoContentType;
+    }
+
+    public Long getLogoFileSize() {
+        return logoFileSize;
+    }
+
+    public void setLogoFileSize(Long logoFileSize) {
+        this.logoFileSize = logoFileSize;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    /** Public URL of the logo (serialised as "logoUrl"), or null if none. */
+    public String getLogoUrl() {
+        return logoKey != null ? "/companies/" + id + "/logo" : null;
     }
 }

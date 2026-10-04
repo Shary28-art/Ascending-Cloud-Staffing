@@ -2,48 +2,50 @@ package com.ascendingcloud.staffing.controller;
 
 import com.ascendingcloud.staffing.entity.Skill;
 import com.ascendingcloud.staffing.service.SkillService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/skills")
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "http://localhost:5174"
-})
 public class SkillController {
 
-    private final SkillService skillService;
+    private final SkillService service;
 
-    public SkillController(SkillService skillService) {
-        this.skillService = skillService;
+    public SkillController(SkillService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Skill> getAllSkills() {
-        return skillService.getAllSkills();
+    public ResponseEntity<List<Skill>> getAllSkills() {
+        return ResponseEntity.ok(service.getAllSkills());
     }
 
     @GetMapping("/{id}")
-    public Skill getSkillById(@PathVariable Integer id) {
-        return skillService.getSkillById(id);
+    public ResponseEntity<Skill> getSkillById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getSkillById(id));
     }
 
     @PostMapping
-    public Skill createSkill(@RequestBody Skill skill) {
-        return skillService.createSkill(skill);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Skill> createSkill(@RequestBody Skill body) {
+        return ResponseEntity.status(201).body(service.createSkill(body));
     }
 
     @PutMapping("/{id}")
-    public Skill updateSkill(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Skill> updateSkill(
             @PathVariable Integer id,
-            @RequestBody Skill skill) {
-        return skillService.updateSkill(id, skill);
+            @RequestBody Skill body) {
+        return ResponseEntity.ok(service.updateSkill(id, body));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSkill(@PathVariable Integer id) {
-        skillService.deleteSkill(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteSkill(@PathVariable Integer id) {
+        service.deleteSkill(id);
+        return ResponseEntity.noContent().build();
     }
 }

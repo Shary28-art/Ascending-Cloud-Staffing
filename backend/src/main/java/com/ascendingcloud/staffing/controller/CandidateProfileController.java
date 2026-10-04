@@ -1,115 +1,56 @@
 package com.ascendingcloud.staffing.controller;
 
+import com.ascendingcloud.staffing.dto.CandidateProfileRequest;
 import com.ascendingcloud.staffing.dto.CandidateProfileResponse;
+import com.ascendingcloud.staffing.security.CurrentUserService;
 import com.ascendingcloud.staffing.service.CandidateProfileService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/candidate-profiles")
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "http://localhost:5174"
-})
 public class CandidateProfileController {
 
     private final CandidateProfileService candidateProfileService;
+    private final CurrentUserService currentUserService;
 
     public CandidateProfileController(
-            CandidateProfileService candidateProfileService) {
-
+            CandidateProfileService candidateProfileService,
+            CurrentUserService currentUserService) {
         this.candidateProfileService = candidateProfileService;
+        this.currentUserService = currentUserService;
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CANDIDATE')")
     public ResponseEntity<CandidateProfileResponse> createProfile(
-            @RequestParam String email,
             @RequestBody CandidateProfileRequest request) {
-
-        CandidateProfileResponse profile =
-                candidateProfileService.createProfile(
-                        email,
-                        request.phone(),
-                        request.location(),
-                        request.bio(),
-                        request.professionalHeadline(),
-                        request.professionalSummary(),
-                        request.currentJobTitle(),
-                        request.totalYearsExperience(),
-                        request.desiredJobTitle(),
-                        request.preferredEmploymentType(),
-                        request.preferredWorkArrangement(),
-                        request.preferredJobLocation(),
-                        request.salaryExpectation(),
-                        request.availabilityDate(),
-                        request.workAuthorizationStatus(),
-                        request.sponsorshipRequired(),
-                        request.securityClearanceStatus(),
-                        request.profileVisibility()
-                );
-
-        return ResponseEntity.ok(profile);
+        return ResponseEntity.status(201).body(
+                candidateProfileService.createProfile(currentUserService.getUser(), request));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CandidateProfileResponse> getProfile(
-            @RequestParam String email) {
-
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<CandidateProfileResponse> getMyProfile() {
         return ResponseEntity.ok(
-                candidateProfileService.getProfile(email)
-        );
+                candidateProfileService.getMyProfile(currentUserService.getUser()));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<CandidateProfileResponse> updateProfile(
-            @RequestParam String email,
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<CandidateProfileResponse> updateMyProfile(
             @RequestBody CandidateProfileRequest request) {
-
         return ResponseEntity.ok(
-                candidateProfileService.updateProfile(
-                        email,
-                        request.phone(),
-                        request.location(),
-                        request.bio(),
-                        request.professionalHeadline(),
-                        request.professionalSummary(),
-                        request.currentJobTitle(),
-                        request.totalYearsExperience(),
-                        request.desiredJobTitle(),
-                        request.preferredEmploymentType(),
-                        request.preferredWorkArrangement(),
-                        request.preferredJobLocation(),
-                        request.salaryExpectation(),
-                        request.availabilityDate(),
-                        request.workAuthorizationStatus(),
-                        request.sponsorshipRequired(),
-                        request.securityClearanceStatus(),
-                        request.profileVisibility()
-                )
-        );
+                candidateProfileService.updateMyProfile(currentUserService.getUser(), request));
     }
 
-    public record CandidateProfileRequest(
-            String phone,
-            String location,
-            String bio,
-            String professionalHeadline,
-            String professionalSummary,
-            String currentJobTitle,
-            BigDecimal totalYearsExperience,
-            String desiredJobTitle,
-            String preferredEmploymentType,
-            String preferredWorkArrangement,
-            String preferredJobLocation,
-            String salaryExpectation,
-            LocalDate availabilityDate,
-            String workAuthorizationStatus,
-            Boolean sponsorshipRequired,
-            String securityClearanceStatus,
-            Boolean profileVisibility
-    ) {
+    /** For employers (shared or applicant profiles) and admins. */
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('EMPLOYER','ADMIN')")
+    public ResponseEntity<CandidateProfileResponse> getCandidateProfile(
+            @PathVariable Integer id) {
+        return ResponseEntity.ok(
+                candidateProfileService.getProfileForViewer(currentUserService.getUser(), id));
     }
 }

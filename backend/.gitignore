@@ -1,8 +1,12 @@
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### Secrets and uploaded files ###
+application-local.properties
+uploads/
 
 ### STS ###
 .apt_generated

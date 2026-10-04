@@ -5,8 +5,13 @@ import java.time.LocalDate;
 
 public record CandidateProfileResponse(
         Integer id,
+        String name,
+        String email,
         String phone,
         String location,
+        String city,
+        String state,
+        String country,
         String bio,
         String professionalHeadline,
         String professionalSummary,
@@ -21,6 +26,8 @@ public record CandidateProfileResponse(
         String workAuthorizationStatus,
         Boolean sponsorshipRequired,
         String securityClearanceStatus,
-        Boolean profileVisibility
+        String linkedinPortfolioUrl,
+        Boolean profileVisibility,
+        Boolean shareWithEmployers
 ) {
 }

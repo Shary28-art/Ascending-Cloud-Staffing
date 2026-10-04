@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "applications",
+@Table(name = "applications",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_application_job_candidate",
                         columnNames = {"job_id", "candidate_id"}
                 )
-        }
-)
+        })
 public class Application {
 
     @Id
@@ -34,6 +32,13 @@ public class Application {
     private LocalDateTime appliedAt;
 
     public Application() {
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (appliedAt == null) {
+            appliedAt = LocalDateTime.now();
+        }
     }
 
     public Integer getId() {

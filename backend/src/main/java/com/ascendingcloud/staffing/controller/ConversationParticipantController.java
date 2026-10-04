@@ -1,6 +1,7 @@
 package com.ascendingcloud.staffing.controller;
 
-import com.ascendingcloud.staffing.entity.ConversationParticipant;
+import com.ascendingcloud.staffing.dto.ConversationParticipantDTO;
+import com.ascendingcloud.staffing.security.CurrentUserService;
 import com.ascendingcloud.staffing.service.ConversationParticipantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,34 +10,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/conversation-participants")
-@CrossOrigin(origins = "*")
 public class ConversationParticipantController {
 
     private final ConversationParticipantService service;
+    private final CurrentUserService currentUserService;
 
-    public ConversationParticipantController(ConversationParticipantService service) {
+    public ConversationParticipantController(
+            ConversationParticipantService service,
+            CurrentUserService currentUserService) {
         this.service = service;
+        this.currentUserService = currentUserService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ConversationParticipant>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    @GetMapping("/conversation/{conversationId}")
+    public ResponseEntity<List<ConversationParticipantDTO>> getByConversation(
+            @PathVariable Integer conversationId) {
+        return ResponseEntity.ok(
+                service.getByConversation(currentUserService.getUser(), conversationId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ConversationParticipant> getById(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.getById(id));
-    }
-
+    /** Body: {"conversationId": 3, "userId": 7}. */
     @PostMapping
-    public ResponseEntity<ConversationParticipant> create(
-            @RequestBody ConversationParticipant participant) {
-        return ResponseEntity.ok(service.create(participant));
+    public ResponseEntity<ConversationParticipantDTO> addParticipant(
+            @RequestBody ConversationParticipantDTO request) {
+        return ResponseEntity.status(201).body(service.addParticipant(
+                currentUserService.getUser(), request.conversationId(), request.userId()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
+    public ResponseEntity<Void> remove(@PathVariable Integer id) {
+        service.remove(currentUserService.getUser(), id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,59 +1,55 @@
 package com.ascendingcloud.staffing.controller;
 
-import com.ascendingcloud.staffing.entity.Notification;
+import com.ascendingcloud.staffing.dto.NotificationDTO;
+import com.ascendingcloud.staffing.security.CurrentUserService;
 import com.ascendingcloud.staffing.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/notifications")
-@CrossOrigin(origins = "*")
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final CurrentUserService currentUserService;
 
-    public NotificationController(NotificationService notificationService) {
+    public NotificationController(
+            NotificationService notificationService,
+            CurrentUserService currentUserService) {
         this.notificationService = notificationService;
+        this.currentUserService = currentUserService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Notification>> getAllNotifications() {
+    public ResponseEntity<List<NotificationDTO>> getMyNotifications() {
         return ResponseEntity.ok(
-                notificationService.getAllNotifications()
-        );
+                notificationService.getMyNotifications(currentUserService.getUser()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Notification> getNotificationById(
-            @PathVariable Integer id) {
-        return ResponseEntity.ok(
-                notificationService.getNotificationById(id)
-        );
+    @GetMapping("/unread-count")
+    public ResponseEntity<Map<String, Long>> unreadCount() {
+        return ResponseEntity.ok(Map.of(
+                "count", notificationService.countUnread(currentUserService.getUser())));
     }
 
-    @PostMapping
-    public ResponseEntity<Notification> createNotification(
-            @RequestBody Notification notification) {
+    @PatchMapping("/{id}/read")
+    public ResponseEntity<NotificationDTO> markRead(@PathVariable Integer id) {
         return ResponseEntity.ok(
-                notificationService.createNotification(notification)
-        );
+                notificationService.markRead(currentUserService.getUser(), id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Notification> updateNotification(
-            @PathVariable Integer id,
-            @RequestBody Notification notification) {
-        return ResponseEntity.ok(
-                notificationService.updateNotification(id, notification)
-        );
+    @PatchMapping("/read-all")
+    public ResponseEntity<Map<String, Integer>> markAllRead() {
+        return ResponseEntity.ok(Map.of(
+                "updated", notificationService.markAllRead(currentUserService.getUser())));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotification(
-            @PathVariable Integer id) {
-        notificationService.deleteNotification(id);
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        notificationService.delete(currentUserService.getUser(), id);
         return ResponseEntity.noContent().build();
     }
 }

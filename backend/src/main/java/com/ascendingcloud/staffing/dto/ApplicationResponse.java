@@ -6,7 +6,9 @@ public class ApplicationResponse {
 
     private Integer id;
     private Integer jobId;
+    private String jobTitle;
     private Integer candidateId;
+    private String candidateName;
     private String status;
     private LocalDateTime appliedAt;
 
@@ -16,12 +18,17 @@ public class ApplicationResponse {
     public ApplicationResponse(
             Integer id,
             Integer jobId,
+            String jobTitle,
             Integer candidateId,
+            String candidateName,
             String status,
             LocalDateTime appliedAt) {
+
         this.id = id;
         this.jobId = jobId;
+        this.jobTitle = jobTitle;
         this.candidateId = candidateId;
+        this.candidateName = candidateName;
         this.status = status;
         this.appliedAt = appliedAt;
     }
@@ -42,12 +49,28 @@ public class ApplicationResponse {
         this.jobId = jobId;
     }
 
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
     public Integer getCandidateId() {
         return candidateId;
     }
 
     public void setCandidateId(Integer candidateId) {
         this.candidateId = candidateId;
+    }
+
+    public String getCandidateName() {
+        return candidateName;
+    }
+
+    public void setCandidateName(String candidateName) {
+        this.candidateName = candidateName;
     }
 
     public String getStatus() {

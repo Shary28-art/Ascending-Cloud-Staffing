@@ -5,10 +5,11 @@ import com.ascendingcloud.staffing.entity.CandidateProfile;
 import com.ascendingcloud.staffing.entity.CandidateSkill;
 import com.ascendingcloud.staffing.entity.Skill;
 import com.ascendingcloud.staffing.entity.User;
+import com.ascendingcloud.staffing.exception.BadRequestException;
+import com.ascendingcloud.staffing.exception.ResourceNotFoundException;
 import com.ascendingcloud.staffing.repository.CandidateProfileRepository;
 import com.ascendingcloud.staffing.repository.CandidateSkillRepository;
 import com.ascendingcloud.staffing.repository.SkillRepository;
-import com.ascendingcloud.staffing.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,125 +21,71 @@ public class CandidateSkillService {
     private final CandidateSkillRepository candidateSkillRepository;
     private final CandidateProfileRepository candidateProfileRepository;
     private final SkillRepository skillRepository;
-    private final UserRepository userRepository;
 
     public CandidateSkillService(
             CandidateSkillRepository candidateSkillRepository,
             CandidateProfileRepository candidateProfileRepository,
-            SkillRepository skillRepository,
-            UserRepository userRepository
-    ) {
+            SkillRepository skillRepository) {
         this.candidateSkillRepository = candidateSkillRepository;
         this.candidateProfileRepository = candidateProfileRepository;
         this.skillRepository = skillRepository;
-        this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<CandidateSkillResponse> getAllSkills() {
         return skillRepository.findAll()
                 .stream()
-                .map(skill -> new CandidateSkillResponse(
-                        skill.getId(),
-                        skill.getName()
-                ))
+                .map(skill -> new CandidateSkillResponse(skill.getId(), skill.getName()))
                 .toList();
     }
 
-    public List<CandidateSkillResponse> getCandidateSkills(String email) {
+    @Transactional(readOnly = true)
+    public List<CandidateSkillResponse> getCandidateSkills(User user) {
+        CandidateProfile profile = profileOf(user);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!"CANDIDATE".equalsIgnoreCase(user.getRole())) {
-            throw new RuntimeException("Only candidates can access candidate skills");
-        }
-
-        CandidateProfile candidateProfile =
-                candidateProfileRepository.findByUserId(user.getId())
-                        .orElseThrow(() ->
-                                new RuntimeException("Candidate profile not found"));
-
-        return candidateSkillRepository
-                .findByCandidateId(candidateProfile.getId())
+        return candidateSkillRepository.findByCandidateId(profile.getId())
                 .stream()
-                .map(candidateSkill -> new CandidateSkillResponse(
-                        candidateSkill.getSkillId(),
-                        candidateSkill.getSkill().getName()
-                ))
+                .map(cs -> new CandidateSkillResponse(
+                        cs.getSkillId(),
+                        cs.getSkill().getName()))
                 .toList();
     }
 
-    public CandidateSkillResponse addSkill(
-            String email,
-            Integer skillId
-    ) {
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!"CANDIDATE".equalsIgnoreCase(user.getRole())) {
-            throw new RuntimeException("Only candidates can add skills");
-        }
-
-        CandidateProfile candidateProfile =
-                candidateProfileRepository.findByUserId(user.getId())
-                        .orElseThrow(() ->
-                                new RuntimeException("Candidate profile not found"));
+    @Transactional
+    public CandidateSkillResponse addSkill(User user, Integer skillId) {
+        CandidateProfile profile = profileOf(user);
 
         Skill skill = skillRepository.findById(skillId)
-                .orElseThrow(() ->
-                        new RuntimeException("Skill not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Skill not found"));
 
-        if (candidateSkillRepository.existsByCandidateIdAndSkillId(
-                candidateProfile.getId(),
-                skillId
-        )) {
-            throw new RuntimeException("Skill already added");
+        if (candidateSkillRepository.existsByCandidateIdAndSkillId(profile.getId(), skillId)) {
+            throw new BadRequestException("Skill already added");
         }
 
         CandidateSkill candidateSkill = new CandidateSkill();
-
-        candidateSkill.setCandidateId(candidateProfile.getId());
+        candidateSkill.setCandidateId(profile.getId());
         candidateSkill.setSkillId(skill.getId());
-        candidateSkill.setCandidate(candidateProfile);
+        candidateSkill.setCandidate(profile);
         candidateSkill.setSkill(skill);
 
         candidateSkillRepository.save(candidateSkill);
 
-        return new CandidateSkillResponse(
-                skill.getId(),
-                skill.getName()
-        );
+        return new CandidateSkillResponse(skill.getId(), skill.getName());
     }
 
     @Transactional
-    public void removeSkill(
-            String email,
-            Integer skillId
-    ) {
+    public void removeSkill(User user, Integer skillId) {
+        CandidateProfile profile = profileOf(user);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!"CANDIDATE".equalsIgnoreCase(user.getRole())) {
-            throw new RuntimeException("Only candidates can remove skills");
+        if (!candidateSkillRepository.existsByCandidateIdAndSkillId(profile.getId(), skillId)) {
+            throw new ResourceNotFoundException("Skill is not assigned to this candidate");
         }
 
-        CandidateProfile candidateProfile =
-                candidateProfileRepository.findByUserId(user.getId())
-                        .orElseThrow(() ->
-                                new RuntimeException("Candidate profile not found"));
+        candidateSkillRepository.deleteByCandidateIdAndSkillId(profile.getId(), skillId);
+    }
 
-        if (!candidateSkillRepository.existsByCandidateIdAndSkillId(
-                candidateProfile.getId(),
-                skillId
-        )) {
-            throw new RuntimeException("Skill is not assigned to this candidate");
-        }
-
-        candidateSkillRepository.deleteByCandidateIdAndSkillId(
-                candidateProfile.getId(),
-                skillId
-        );
+    private CandidateProfile profileOf(User user) {
+        return candidateProfileRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate profile not found"));
     }
 }

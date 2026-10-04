@@ -3,55 +3,49 @@ package com.ascendingcloud.staffing.controller;
 import com.ascendingcloud.staffing.entity.JobCategory;
 import com.ascendingcloud.staffing.service.JobCategoryService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/job-categories")
-@CrossOrigin(origins = "*")
 public class JobCategoryController {
 
-    private final JobCategoryService jobCategoryService;
+    private final JobCategoryService service;
 
-    public JobCategoryController(JobCategoryService jobCategoryService) {
-        this.jobCategoryService = jobCategoryService;
+    public JobCategoryController(JobCategoryService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<JobCategory>> getAllCategories() {
-        return ResponseEntity.ok(jobCategoryService.getAllCategories());
+    public ResponseEntity<List<JobCategory>> getAllJobCategories() {
+        return ResponseEntity.ok(service.getAllJobCategories());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobCategory> getCategoryById(
-            @PathVariable Integer id) {
-        return ResponseEntity.ok(
-                jobCategoryService.getCategoryById(id)
-        );
+    public ResponseEntity<JobCategory> getJobCategoryById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getJobCategoryById(id));
     }
 
     @PostMapping
-    public ResponseEntity<JobCategory> createCategory(
-            @RequestBody JobCategory category) {
-        return ResponseEntity.ok(
-                jobCategoryService.createCategory(category)
-        );
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<JobCategory> createJobCategory(@RequestBody JobCategory body) {
+        return ResponseEntity.status(201).body(service.createJobCategory(body));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JobCategory> updateCategory(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<JobCategory> updateJobCategory(
             @PathVariable Integer id,
-            @RequestBody JobCategory category) {
-        return ResponseEntity.ok(
-                jobCategoryService.updateCategory(id, category)
-        );
+            @RequestBody JobCategory body) {
+        return ResponseEntity.ok(service.updateJobCategory(id, body));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(
-            @PathVariable Integer id) {
-        jobCategoryService.deleteCategory(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteJobCategory(@PathVariable Integer id) {
+        service.deleteJobCategory(id);
         return ResponseEntity.noContent().build();
     }
 }

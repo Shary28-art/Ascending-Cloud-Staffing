@@ -1,6 +1,8 @@
 package com.ascendingcloud.staffing.controller;
 
-import com.ascendingcloud.staffing.entity.Message;
+import com.ascendingcloud.staffing.dto.MessageDTO;
+import com.ascendingcloud.staffing.entity.User;
+import com.ascendingcloud.staffing.security.CurrentUserService;
 import com.ascendingcloud.staffing.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,51 +11,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/messages")
-@CrossOrigin(origins = "*")
 public class MessageController {
 
     private final MessageService messageService;
+    private final CurrentUserService currentUserService;
 
-    public MessageController(MessageService messageService) {
+    public MessageController(
+            MessageService messageService,
+            CurrentUserService currentUserService) {
         this.messageService = messageService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Message>> getAllMessages() {
-        return ResponseEntity.ok(messageService.getAllMessages());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable Integer id) {
-        return ResponseEntity.ok(messageService.getMessageById(id));
+        this.currentUserService = currentUserService;
     }
 
     @GetMapping("/conversation/{conversationId}")
-    public ResponseEntity<List<Message>> getMessagesByConversation(
+    public ResponseEntity<List<MessageDTO>> getMessagesByConversation(
             @PathVariable Integer conversationId) {
         return ResponseEntity.ok(
-                messageService.getMessagesByConversationId(conversationId)
-        );
+                messageService.getMessages(currentUserService.getUser(), conversationId));
     }
 
+    /** Body: {"conversationId": 3, "content": "Hello"}. */
     @PostMapping
-    public ResponseEntity<Message> createMessage(
-            @RequestBody Message message) {
-        return ResponseEntity.ok(messageService.createMessage(message));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Message> updateMessage(
-            @PathVariable Integer id,
-            @RequestBody Message message) {
-        return ResponseEntity.ok(
-                messageService.updateMessage(id, message)
-        );
+    public ResponseEntity<MessageDTO> sendMessage(@RequestBody MessageDTO request) {
+        return ResponseEntity.status(201).body(
+                messageService.sendMessage(currentUserService.getUser(), request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Integer id) {
-        messageService.deleteMessage(id);
+        User user = currentUserService.getUser();
+        messageService.deleteMessage(user, id, currentUserService.isAdmin(user));
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,51 +1,70 @@
 package com.ascendingcloud.staffing.service;
 
 import com.ascendingcloud.staffing.entity.JobCategory;
+import com.ascendingcloud.staffing.exception.BadRequestException;
+import com.ascendingcloud.staffing.exception.ResourceNotFoundException;
 import com.ascendingcloud.staffing.repository.JobCategoryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class JobCategoryService {
 
-    private final JobCategoryRepository jobCategoryRepository;
+    private final JobCategoryRepository repository;
 
-    public JobCategoryService(JobCategoryRepository jobCategoryRepository) {
-        this.jobCategoryRepository = jobCategoryRepository;
+    public JobCategoryService(JobCategoryRepository repository) {
+        this.repository = repository;
     }
 
-    public List<JobCategory> getAllCategories() {
-        return jobCategoryRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<JobCategory> getAllJobCategories() {
+        return repository.findAll();
     }
 
-    public JobCategory getCategoryById(Integer id) {
-        return jobCategoryRepository.findById(id)
+    @Transactional(readOnly = true)
+    public JobCategory getJobCategoryById(Integer id) {
+        return repository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Job category not found"));
+                        new ResourceNotFoundException("Job category not found with id: " + id));
     }
 
-    public JobCategory createCategory(JobCategory category) {
-        return jobCategoryRepository.save(category);
+    @Transactional
+    public JobCategory createJobCategory(JobCategory entity) {
+        String name = cleanName(entity.getName());
+
+        JobCategory created = new JobCategory();
+        created.setName(name);
+        created.setDescription(entity.getDescription());
+
+        return repository.save(created);
     }
 
-    public JobCategory updateCategory(
-            Integer id,
-            JobCategory category) {
+    @Transactional
+    public JobCategory updateJobCategory(Integer id, JobCategory entity) {
+        JobCategory existing = getJobCategoryById(id);
 
-        JobCategory existingCategory = getCategoryById(id);
+        existing.setName(cleanName(entity.getName()));
+        existing.setDescription(entity.getDescription());
 
-        existingCategory.setName(category.getName());
-        existingCategory.setDescription(category.getDescription());
-
-        return jobCategoryRepository.save(existingCategory);
+        return repository.save(existing);
     }
 
-    public void deleteCategory(Integer id) {
-        if (!jobCategoryRepository.existsById(id)) {
-            throw new RuntimeException("Job category not found");
+    @Transactional
+    public void deleteJobCategory(Integer id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Job category not found with id: " + id);
         }
 
-        jobCategoryRepository.deleteById(id);
+        repository.deleteById(id);
+    }
+
+    private String cleanName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new BadRequestException("Job category name is required");
+        }
+
+        return name.trim();
     }
 }

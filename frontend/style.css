@@ -70,9 +70,17 @@ button {
 }
 
 .logo {
-    font-size: 21px;
-    font-weight: 800;
-    color: var(--primary);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.company-logo {
+    height: 48px;
+    width: auto;
+    max-width: 240px;
+    object-fit: contain;
+    display: block;
 }
 
 .logo span {

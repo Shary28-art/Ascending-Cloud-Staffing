@@ -11,9 +11,9 @@ public class JobAlert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "candidate_id", nullable = false)
+    private CandidateProfile candidate;
 
     @Column(length = 150)
     private String keyword;
@@ -21,17 +21,13 @@ public class JobAlert {
     @Column(length = 150)
     private String location;
 
-    @ManyToOne
-    @JoinColumn(name = "job_category_id")
-    private JobCategory jobCategory;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cloud_platform_id")
+    private CloudPlatform cloudPlatform;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employment_type_id")
     private EmploymentType employmentType;
-
-    @ManyToOne
-    @JoinColumn(name = "experience_level_id")
-    private ExperienceLevel experienceLevel;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -47,12 +43,12 @@ public class JobAlert {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public CandidateProfile getCandidate() {
+        return candidate;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCandidate(CandidateProfile candidate) {
+        this.candidate = candidate;
     }
 
     public String getKeyword() {
@@ -71,12 +67,12 @@ public class JobAlert {
         this.location = location;
     }
 
-    public JobCategory getJobCategory() {
-        return jobCategory;
+    public CloudPlatform getCloudPlatform() {
+        return cloudPlatform;
     }
 
-    public void setJobCategory(JobCategory jobCategory) {
-        this.jobCategory = jobCategory;
+    public void setCloudPlatform(CloudPlatform cloudPlatform) {
+        this.cloudPlatform = cloudPlatform;
     }
 
     public EmploymentType getEmploymentType() {
@@ -87,19 +83,11 @@ public class JobAlert {
         this.employmentType = employmentType;
     }
 
-    public ExperienceLevel getExperienceLevel() {
-        return experienceLevel;
-    }
-
-    public void setExperienceLevel(ExperienceLevel experienceLevel) {
-        this.experienceLevel = experienceLevel;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreaUserAdminRoleId.javatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }

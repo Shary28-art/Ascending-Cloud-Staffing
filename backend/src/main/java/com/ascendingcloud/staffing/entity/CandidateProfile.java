@@ -1,7 +1,6 @@
 package com.ascendingcloud.staffing.entity;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,11 +16,20 @@ public class CandidateProfile {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Column(length = 20)
+    @Column(length = 30)
     private String phone;
 
     @Column(length = 150)
     private String location;
+
+    @Column(length = 100)
+    private String city;
+
+    @Column(length = 100)
+    private String state;
+
+    @Column(length = 100)
+    private String country;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
@@ -65,8 +73,14 @@ public class CandidateProfile {
     @Column(name = "security_clearance_status", length = 100)
     private String securityClearanceStatus;
 
+    @Column(name = "linkedin_portfolio_url", length = 255)
+    private String linkedinPortfolioUrl;
+
     @Column(name = "profile_visibility", nullable = false)
     private Boolean profileVisibility = true;
+
+    @Column(name = "share_with_employers")
+    private Boolean shareWithEmployers = false;
 
     public CandidateProfile() {
     }
@@ -101,6 +115,30 @@ public class CandidateProfile {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getBio() {
@@ -215,11 +253,27 @@ public class CandidateProfile {
         this.securityClearanceStatus = securityClearanceStatus;
     }
 
+    public String getLinkedinPortfolioUrl() {
+        return linkedinPortfolioUrl;
+    }
+
+    public void setLinkedinPortfolioUrl(String linkedinPortfolioUrl) {
+        this.linkedinPortfolioUrl = linkedinPortfolioUrl;
+    }
+
     public Boolean getProfileVisibility() {
         return profileVisibility;
     }
 
     public void setProfileVisibility(Boolean profileVisibility) {
         this.profileVisibility = profileVisibility;
+    }
+
+    public Boolean getShareWithEmployers() {
+        return shareWithEmployers;
+    }
+
+    public void setShareWithEmployers(Boolean shareWithEmployers) {
+        this.shareWithEmployers = shareWithEmployers;
     }
 }

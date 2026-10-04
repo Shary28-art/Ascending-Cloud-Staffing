@@ -170,9 +170,13 @@ function navbar() {
     return `
         <header class="header">
             <div class="container nav">
-                <a href="${pageLink("index.html")}" class="logo">
-                    Ascending <span>Cloud</span>
-                </a>
+              <a href="${pageLink("index.html")}" class="logo">
+    <img
+        src="assets/ascending-cloud-logo.jpeg"
+        alt="Ascending Cloud Staffing"
+        class="company-logo"
+    />
+</a>
 
                 <button
                     type="button"

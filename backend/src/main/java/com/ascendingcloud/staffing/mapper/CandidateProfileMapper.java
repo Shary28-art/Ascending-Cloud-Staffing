@@ -8,8 +8,7 @@ public class CandidateProfileMapper {
     private CandidateProfileMapper() {
     }
 
-    public static CandidateProfileResponse toResponse(
-            CandidateProfile profile) {
+    public static CandidateProfileResponse toResponse(CandidateProfile profile) {
 
         if (profile == null) {
             return null;
@@ -17,8 +16,13 @@ public class CandidateProfileMapper {
 
         return new CandidateProfileResponse(
                 profile.getId(),
+                profile.getUser() != null ? profile.getUser().getName() : null,
+                profile.getUser() != null ? profile.getUser().getEmail() : null,
                 profile.getPhone(),
                 profile.getLocation(),
+                profile.getCity(),
+                profile.getState(),
+                profile.getCountry(),
                 profile.getBio(),
                 profile.getProfessionalHeadline(),
                 profile.getProfessionalSummary(),
@@ -33,7 +37,9 @@ public class CandidateProfileMapper {
                 profile.getWorkAuthorizationStatus(),
                 profile.getSponsorshipRequired(),
                 profile.getSecurityClearanceStatus(),
-                profile.getProfileVisibility()
+                profile.getLinkedinPortfolioUrl(),
+                profile.getProfileVisibility(),
+                profile.getShareWithEmployers()
         );
     }
 }

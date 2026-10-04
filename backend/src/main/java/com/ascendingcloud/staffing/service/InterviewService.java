@@ -4,6 +4,7 @@ import com.ascendingcloud.staffing.entity.Interview;
 import com.ascendingcloud.staffing.repository.InterviewRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,6 +27,11 @@ public class InterviewService {
     }
 
     public Interview createInterview(Interview interview) {
+
+        if (interview.getCreatedAt() == null) {
+            interview.setCreatedAt(LocalDateTime.now());
+        }
+
         return interviewRepository.save(interview);
     }
 
@@ -36,7 +42,7 @@ public class InterviewService {
         Interview existing = getInterviewById(id);
 
         existing.setApplication(interview.getApplication());
-        existing.setScheduledAt(interview.getScheduledAt());
+        existing.setInterviewDate(interview.getInterviewDate());
         existing.setInterviewType(interview.getInterviewType());
         existing.setMeetingLink(interview.getMeetingLink());
         existing.setNotes(interview.getNotes());
@@ -45,6 +51,7 @@ public class InterviewService {
     }
 
     public void deleteInterview(Integer id) {
+
         if (!interviewRepository.existsById(id)) {
             throw new RuntimeException("Interview not found");
         }

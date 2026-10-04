@@ -1,48 +1,51 @@
 package com.ascendingcloud.staffing.controller;
 
+import com.ascendingcloud.staffing.entity.AdminRole;
+import com.ascendingcloud.staffing.service.AdminRoleService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.persistence.*;
+import java.util.List;
 
-@Entity
-@Table(name = "admin_roles")
+@RestController
+@RequestMapping("/api/admin-roles")
 public class AdminRoleController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private final AdminRoleService service;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String name;
-
-    @Column(length = 255)
-    private String description;
-
-    public AdminRoleController() {
+    public AdminRoleController(AdminRoleService service) {
+        this.service = service;
     }
 
-    public Integer getId() {
-        return id;
+    @GetMapping
+    public ResponseEntity<List<AdminRole>> getAllAdminRoles() {
+        return ResponseEntity.ok(service.getAllAdminRoles());
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @GetMapping("/{id}")
+    public ResponseEntity<AdminRole> getAdminRoleById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getAdminRoleById(id));
     }
 
-    public String getName() {
-        return name;
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AdminRole> createAdminRole(@RequestBody AdminRole body) {
+        return ResponseEntity.status(201).body(service.createAdminRole(body));
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AdminRole> updateAdminRole(
+            @PathVariable Integer id,
+            @RequestBody AdminRole body) {
+        return ResponseEntity.ok(service.updateAdminRole(id, body));
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteAdminRole(@PathVariable Integer id) {
+        service.deleteAdminRole(id);
+        return ResponseEntity.noContent().build();
     }
 }
-    
-

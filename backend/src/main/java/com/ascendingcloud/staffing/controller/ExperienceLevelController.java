@@ -3,62 +3,49 @@ package com.ascendingcloud.staffing.controller;
 import com.ascendingcloud.staffing.entity.ExperienceLevel;
 import com.ascendingcloud.staffing.service.ExperienceLevelService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/experience-levels")
-@CrossOrigin(origins = "*")
 public class ExperienceLevelController {
 
-    private final ExperienceLevelService experienceLevelService;
+    private final ExperienceLevelService service;
 
-    public ExperienceLevelController(
-            ExperienceLevelService experienceLevelService) {
-        this.experienceLevelService = experienceLevelService;
+    public ExperienceLevelController(ExperienceLevelService service) {
+        this.service = service;
     }
 
     @GetMapping
     public ResponseEntity<List<ExperienceLevel>> getAllExperienceLevels() {
-        return ResponseEntity.ok(
-                experienceLevelService.getAllExperienceLevels()
-        );
+        return ResponseEntity.ok(service.getAllExperienceLevels());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExperienceLevel> getExperienceLevelById(
-            @PathVariable Integer id) {
-        return ResponseEntity.ok(
-                experienceLevelService.getExperienceLevelById(id)
-        );
+    public ResponseEntity<ExperienceLevel> getExperienceLevelById(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.getExperienceLevelById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ExperienceLevel> createExperienceLevel(
-            @RequestBody ExperienceLevel experienceLevel) {
-        return ResponseEntity.ok(
-                experienceLevelService.createExperienceLevel(
-                        experienceLevel
-                )
-        );
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ExperienceLevel> createExperienceLevel(@RequestBody ExperienceLevel body) {
+        return ResponseEntity.status(201).body(service.createExperienceLevel(body));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ExperienceLevel> updateExperienceLevel(
             @PathVariable Integer id,
-            @RequestBody ExperienceLevel experienceLevel) {
-        return ResponseEntity.ok(
-                experienceLevelService.updateExperienceLevel(
-                        id, experienceLevel
-                )
-        );
+            @RequestBody ExperienceLevel body) {
+        return ResponseEntity.ok(service.updateExperienceLevel(id, body));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExperienceLevel(
-            @PathVariable Integer id) {
-        experienceLevelService.deleteExperienceLevel(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteExperienceLevel(@PathVariable Integer id) {
+        service.deleteExperienceLevel(id);
         return ResponseEntity.noContent().build();
     }
 }

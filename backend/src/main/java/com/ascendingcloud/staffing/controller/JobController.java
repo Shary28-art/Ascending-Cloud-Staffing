@@ -1,111 +1,84 @@
 package com.ascendingcloud.staffing.controller;
 
-import com.ascendingcloud.staffing.entity.Job;
+import com.ascendingcloud.staffing.dto.JobDTO;
+import com.ascendingcloud.staffing.dto.StatusUpdateRequest;
+import com.ascendingcloud.staffing.security.CurrentUserService;
 import com.ascendingcloud.staffing.service.JobService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/jobs")
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "http://localhost:5174"
-})
 public class JobController {
 
     private final JobService jobService;
+    private final CurrentUserService currentUserService;
 
-    public JobController(JobService jobService) {
+    public JobController(
+            JobService jobService,
+            CurrentUserService currentUserService) {
         this.jobService = jobService;
+        this.currentUserService = currentUserService;
     }
 
-    @PostMapping
-    public ResponseEntity<Job> createJob(
-            @RequestBody JobRequest request) {
-
-        return ResponseEntity.ok(
-                jobService.createJob(
-                        request.title(),
-                        request.companyId(),
-                        request.location(),
-                        request.salary(),
-                        request.cloudPlatformId(),
-                        request.employmentTypeId(),
-                        request.experienceLevelId(),
-                        request.workplaceTypeId(),
-                        request.description()
-                )
-        );
-    }
-
+    /** Public job board: only admin-approved, active jobs. */
     @GetMapping
-    public ResponseEntity<List<Job>> getAllJobs() {
-        return ResponseEntity.ok(
-                jobService.getAllJobs()
-        );
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Job> getJob(
-            @PathVariable Integer id) {
-
-        return ResponseEntity.ok(
-                jobService.getJob(id)
-        );
+    public ResponseEntity<List<JobDTO>> getPublicJobs() {
+        return ResponseEntity.ok(jobService.searchPublicJobs(null, null));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Job>> searchJobs(
+    public ResponseEntity<List<JobDTO>> searchJobs(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String location) {
+        return ResponseEntity.ok(jobService.searchPublicJobs(title, location));
+    }
 
-        return ResponseEntity.ok(
-                jobService.searchJobs(title, location)
-        );
+    /** Every job (any approval state) of the logged-in employer's company. */
+    @GetMapping("/mine")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ResponseEntity<List<JobDTO>> getMyJobs() {
+        return ResponseEntity.ok(jobService.getMyCompanyJobs(currentUserService.getUser()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobDTO> getJob(@PathVariable Integer id) {
+        return ResponseEntity.ok(jobService.getJob(id));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('EMPLOYER','ADMIN')")
+    public ResponseEntity<JobDTO> createJob(@RequestBody JobDTO request) {
+        return ResponseEntity.status(201).body(
+                jobService.createJob(currentUserService.getUser(), request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Job> updateJob(
+    @PreAuthorize("hasAnyRole('EMPLOYER','ADMIN')")
+    public ResponseEntity<JobDTO> updateJob(
             @PathVariable Integer id,
-            @RequestBody JobRequest request) {
-
+            @RequestBody JobDTO request) {
         return ResponseEntity.ok(
-                jobService.updateJob(
-                        id,
-                        request.title(),
-                        request.companyId(),
-                        request.location(),
-                        request.salary(),
-                        request.cloudPlatformId(),
-                        request.employmentTypeId(),
-                        request.experienceLevelId(),
-                        request.workplaceTypeId(),
-                        request.description()
-                )
-        );
+                jobService.updateJob(currentUserService.getUser(), id, request));
+    }
+
+    /** Body: {"status": "PAUSED"}. One of DRAFT, ACTIVE, PAUSED, FILLED, CLOSED, EXPIRED. */
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('EMPLOYER','ADMIN')")
+    public ResponseEntity<JobDTO> updateStatus(
+            @PathVariable Integer id,
+            @RequestBody StatusUpdateRequest request) {
+        return ResponseEntity.ok(
+                jobService.updateJobStatus(currentUserService.getUser(), id, request.status()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJob(
-            @PathVariable Integer id) {
-
-        jobService.deleteJob(id);
-
+    @PreAuthorize("hasAnyRole('EMPLOYER','ADMIN')")
+    public ResponseEntity<Void> deleteJob(@PathVariable Integer id) {
+        jobService.deleteJob(currentUserService.getUser(), id);
         return ResponseEntity.noContent().build();
-    }
-
-    public record JobRequest(
-            String title,
-            Integer companyId,
-            String location,
-            String salary,
-            Integer cloudPlatformId,
-            Integer employmentTypeId,
-            Integer experienceLevelId,
-            Integer workplaceTypeId,
-            String description
-    ) {
     }
 }

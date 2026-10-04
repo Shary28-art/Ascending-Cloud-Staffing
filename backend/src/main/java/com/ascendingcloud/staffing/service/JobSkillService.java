@@ -3,6 +3,9 @@ package com.ascendingcloud.staffing.service;
 import com.ascendingcloud.staffing.entity.Job;
 import com.ascendingcloud.staffing.entity.JobSkill;
 import com.ascendingcloud.staffing.entity.Skill;
+import com.ascendingcloud.staffing.entity.User;
+import com.ascendingcloud.staffing.exception.BadRequestException;
+import com.ascendingcloud.staffing.exception.ResourceNotFoundException;
 import com.ascendingcloud.staffing.repository.JobRepository;
 import com.ascendingcloud.staffing.repository.JobSkillRepository;
 import com.ascendingcloud.staffing.repository.SkillRepository;
@@ -17,51 +20,51 @@ public class JobSkillService {
     private final JobSkillRepository jobSkillRepository;
     private final JobRepository jobRepository;
     private final SkillRepository skillRepository;
+    private final JobService jobService;
 
     public JobSkillService(
             JobSkillRepository jobSkillRepository,
             JobRepository jobRepository,
-            SkillRepository skillRepository) {
-
+            SkillRepository skillRepository,
+            JobService jobService) {
         this.jobSkillRepository = jobSkillRepository;
         this.jobRepository = jobRepository;
         this.skillRepository = skillRepository;
+        this.jobService = jobService;
     }
 
+    @Transactional(readOnly = true)
     public List<Skill> getJobSkills(Integer jobId) {
-
         if (!jobRepository.existsById(jobId)) {
-            throw new RuntimeException("Job not found");
+            throw new ResourceNotFoundException("Job not found");
         }
 
+        // Copy into plain objects so no lazy Hibernate proxy reaches the JSON layer
         return jobSkillRepository.findByJobId(jobId)
                 .stream()
                 .map(JobSkill::getSkill)
+                .map(s -> {
+                    Skill copy = new Skill();
+                    copy.setId(s.getId());
+                    copy.setName(s.getName());
+                    return copy;
+                })
                 .toList();
     }
 
-    public Skill addSkill(
-            Integer jobId,
-            Integer skillId) {
-
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() ->
-                        new RuntimeException("Job not found"));
+    @Transactional
+    public Skill addSkill(User user, Integer jobId, Integer skillId) {
+        Job job = jobService.find(jobId);
+        jobService.assertCanManage(user, job);
 
         Skill skill = skillRepository.findById(skillId)
-                .orElseThrow(() ->
-                        new RuntimeException("Skill not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Skill not found"));
 
-        if (jobSkillRepository.existsByJobIdAndSkillId(
-                jobId,
-                skillId)) {
-
-            throw new RuntimeException(
-                    "Skill already assigned to this job");
+        if (jobSkillRepository.existsByJobIdAndSkillId(jobId, skillId)) {
+            throw new BadRequestException("Skill already assigned to this job");
         }
 
         JobSkill jobSkill = new JobSkill();
-
         jobSkill.setJobId(job.getId());
         jobSkill.setSkillId(skill.getId());
         jobSkill.setJob(job);
@@ -73,25 +76,14 @@ public class JobSkillService {
     }
 
     @Transactional
-    public void removeSkill(
-            Integer jobId,
-            Integer skillId) {
+    public void removeSkill(User user, Integer jobId, Integer skillId) {
+        Job job = jobService.find(jobId);
+        jobService.assertCanManage(user, job);
 
-        if (!jobRepository.existsById(jobId)) {
-            throw new RuntimeException("Job not found");
+        if (!jobSkillRepository.existsByJobIdAndSkillId(jobId, skillId)) {
+            throw new ResourceNotFoundException("Skill is not assigned to this job");
         }
 
-        if (!jobSkillRepository.existsByJobIdAndSkillId(
-                jobId,
-                skillId)) {
-
-            throw new RuntimeException(
-                    "Skill is not assigned to this job");
-        }
-
-        jobSkillRepository.deleteByJobIdAndSkillId(
-                jobId,
-                skillId
-        );
+        jobSkillRepository.deleteByJobIdAndSkillId(jobId, skillId);
     }
 }

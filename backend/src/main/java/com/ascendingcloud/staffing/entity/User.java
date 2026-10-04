@@ -1,6 +1,7 @@
 package com.ascendingcloud.staffing.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,19 +15,45 @@ public class User {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(name = "first_name", length = 100)
+    private String firstName;
+
+    @Column(name = "last_name", length = 100)
+    private String lastName;
+
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false, length = 255)
     private String password;
 
     @Column(nullable = false, length = 30)
     private String role;
 
+    @Column(length = 30)
+    private String phone;
+
+    @Column(name = "terms_accepted")
+    private Boolean termsAccepted;
+
+    @Column(name = "terms_accepted_at")
+    private LocalDateTime termsAcceptedAt;
+
+    @Column(name = "recruitment_consent")
+    private Boolean recruitmentConsent;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public User() {
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
     public Integer getId() {
@@ -43,6 +70,22 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -67,6 +110,38 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Boolean getTermsAccepted() {
+        return termsAccepted;
+    }
+
+    public void setTermsAccepted(Boolean termsAccepted) {
+        this.termsAccepted = termsAccepted;
+    }
+
+    public LocalDateTime getTermsAcceptedAt() {
+        return termsAcceptedAt;
+    }
+
+    public void setTermsAcceptedAt(LocalDateTime termsAcceptedAt) {
+        this.termsAcceptedAt = termsAcceptedAt;
+    }
+
+    public Boolean getRecruitmentConsent() {
+        return recruitmentConsent;
+    }
+
+    public void setRecruitmentConsent(Boolean recruitmentConsent) {
+        this.recruitmentConsent = recruitmentConsent;
     }
 
     public LocalDateTime getCreatedAt() {

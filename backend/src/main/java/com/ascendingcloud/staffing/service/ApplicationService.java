@@ -3,17 +3,20 @@ package com.ascendingcloud.staffing.service;
 import com.ascendingcloud.staffing.dto.ApplicationResponse;
 import com.ascendingcloud.staffing.dto.ApplicationStatusHistoryResponse;
 import com.ascendingcloud.staffing.entity.Application;
+import com.ascendingcloud.staffing.entity.ApplicationStatus;
 import com.ascendingcloud.staffing.entity.ApplicationStatusHistory;
 import com.ascendingcloud.staffing.entity.CandidateProfile;
 import com.ascendingcloud.staffing.entity.Job;
-import com.ascendingcloud.staffing.entity.Notification;
 import com.ascendingcloud.staffing.entity.User;
+import com.ascendingcloud.staffing.exception.BadRequestException;
+import com.ascendingcloud.staffing.exception.ResourceNotFoundException;
 import com.ascendingcloud.staffing.repository.ApplicationRepository;
 import com.ascendingcloud.staffing.repository.ApplicationStatusHistoryRepository;
 import com.ascendingcloud.staffing.repository.CandidateProfileRepository;
-import com.ascendingcloud.staffing.repository.JobRepository;
-import com.ascendingcloud.staffing.repository.NotificationRepository;
-import com.ascendingcloud.staffing.repository.UserRepository;
+import com.ascendingcloud.staffing.repository.EmployerProfileRepository;
+import com.ascendingcloud.staffing.repository.ResumeRepository;
+import com.ascendingcloud.staffing.security.CurrentUserService;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,73 +29,85 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ApplicationStatusHistoryRepository statusHistoryRepository;
     private final CandidateProfileRepository candidateProfileRepository;
-    private final JobRepository jobRepository;
-    private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
+    private final ResumeRepository resumeRepository;
+    private final EmployerProfileRepository employerProfileRepository;
+    private final JobService jobService;
+    private final NotificationService notificationService;
+    private final CurrentUserService currentUserService;
 
     public ApplicationService(
             ApplicationRepository applicationRepository,
             ApplicationStatusHistoryRepository statusHistoryRepository,
             CandidateProfileRepository candidateProfileRepository,
-            JobRepository jobRepository,
-            UserRepository userRepository,
-            NotificationRepository notificationRepository
-    ) {
+            ResumeRepository resumeRepository,
+            EmployerProfileRepository employerProfileRepository,
+            JobService jobService,
+            NotificationService notificationService,
+            CurrentUserService currentUserService) {
         this.applicationRepository = applicationRepository;
         this.statusHistoryRepository = statusHistoryRepository;
         this.candidateProfileRepository = candidateProfileRepository;
-        this.jobRepository = jobRepository;
-        this.userRepository = userRepository;
-        this.notificationRepository = notificationRepository;
+        this.resumeRepository = resumeRepository;
+        this.employerProfileRepository = employerProfileRepository;
+        this.jobService = jobService;
+        this.notificationService = notificationService;
+        this.currentUserService = currentUserService;
     }
 
+    /** A candidate applies to a public (approved, active) job. */
     @Transactional
-    public ApplicationResponse apply(String email, Integer jobId) {
+    public ApplicationResponse apply(User user, Integer jobId) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (jobId == null) {
+            throw new BadRequestException("jobId is required");
+        }
 
         CandidateProfile candidate = candidateProfileRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Candidate profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Candidate profile not found. Complete your profile first"));
 
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+        Job job = jobService.find(jobId);
 
-        if (applicationRepository.existsByJobIdAndCandidateId(
-                jobId,
-                candidate.getId()
-        )) {
-            throw new RuntimeException("You have already applied for this job");
+        if (!jobService.isPublic(job)) {
+            throw new BadRequestException("This job is not open for applications");
+        }
+
+        if (resumeRepository.findByCandidateId(candidate.getId()).isEmpty()) {
+            throw new BadRequestException("Upload your resume before applying");
+        }
+
+        if (applicationRepository.existsByJobIdAndCandidateId(jobId, candidate.getId())) {
+            throw new BadRequestException("You have already applied for this job");
         }
 
         Application application = new Application();
-
         application.setJob(job);
         application.setCandidate(candidate);
-        application.setStatus("Applied");
+        application.setStatus(ApplicationStatus.APPLIED.getLabel());
         application.setAppliedAt(LocalDateTime.now());
 
-        Application savedApplication = applicationRepository.save(application);
+        Application saved = applicationRepository.save(application);
 
-        saveStatusHistory(savedApplication, "Applied");
+        saveHistory(saved, ApplicationStatus.APPLIED.getLabel());
 
-        createNotification(
-                user,
+        notificationService.notify(user,
                 "Application Submitted",
-                "Your application for " + job.getTitle() + " has been submitted successfully."
-        );
+                "Your application for " + job.getTitle() + " has been submitted successfully.");
 
-        return toResponse(savedApplication);
+        if (job.getCompany() != null) {
+            employerProfileRepository.findByCompanyId(job.getCompany().getId())
+                    .forEach(p -> notificationService.notify(p.getUser(),
+                            "New application",
+                            user.getName() + " applied for " + job.getTitle() + "."));
+        }
+
+        return toResponse(saved);
     }
 
     @Transactional(readOnly = true)
-    public List<ApplicationResponse> getMyApplications(String email) {
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public List<ApplicationResponse> getMyApplications(User user) {
         CandidateProfile candidate = candidateProfileRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Candidate profile not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Candidate profile not found"));
 
         return applicationRepository
                 .findByCandidateIdOrderByAppliedAtDesc(candidate.getId())
@@ -102,124 +117,139 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public List<ApplicationResponse> getJobApplications(
-            String email,
-            Integer jobId
-    ) {
+    public List<ApplicationResponse> getJobApplications(User user, Integer jobId) {
+        Job job = jobService.find(jobId);
+        jobService.assertCanManage(user, job);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!"EMPLOYER".equalsIgnoreCase(user.getRole())
-                && !"ADMIN".equalsIgnoreCase(user.getRole())) {
-            throw new RuntimeException("Only employers or admins can view applications");
-        }
-
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        if ("EMPLOYER".equalsIgnoreCase(user.getRole())) {
-            boolean ownsJob = job.getCompany() != null &&
-                    job.getCompany().getId() != null;
-
-            if (!ownsJob) {
-                throw new RuntimeException("Job is not linked to a company");
-            }
-        }
-
-        return applicationRepository
-                .findByJobIdOrderByAppliedAtDesc(jobId)
+        return applicationRepository.findByJobIdOrderByAppliedAtDesc(jobId)
                 .stream()
                 .map(this::toResponse)
                 .toList();
     }
 
-    @Transactional
-    public ApplicationResponse updateStatus(
-            String email,
-            Integer applicationId,
-            String newStatus
-    ) {
+    /** Admin: everything. Employer: only their company's applications. */
+    @Transactional(readOnly = true)
+    public List<ApplicationResponse> getAll(User user) {
+        List<Application> list;
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new RuntimeException("Application not found"));
-
-        if (!isAllowedStatus(newStatus)) {
-            throw new RuntimeException("Invalid application status");
+        if (currentUserService.isAdmin(user)) {
+            list = applicationRepository.findAllByOrderByAppliedAtDesc();
+        } else {
+            Integer companyId = currentUserService.getEmployerCompanyId(user);
+            list = companyId == null
+                    ? List.of()
+                    : applicationRepository.findByJobCompanyIdOrderByAppliedAtDesc(companyId);
         }
 
-        if ("CANDIDATE".equalsIgnoreCase(user.getRole())) {
-
-            Integer candidateUserId =
-                    application.getCandidate()
-                            .getUser()
-                            .getId();
-
-            if (!candidateUserId.equals(user.getId())) {
-                throw new RuntimeException("You cannot modify this application");
-            }
-
-            if (!"Withdrawn".equalsIgnoreCase(newStatus)) {
-                throw new RuntimeException(
-                        "Candidates can only withdraw an application"
-                );
-            }
-        }
-
-        application.setStatus(newStatus);
-
-        Application savedApplication =
-                applicationRepository.save(application);
-
-        saveStatusHistory(savedApplication, newStatus);
-
-        User candidateUser =
-                savedApplication.getCandidate().getUser();
-
-        createNotification(
-                candidateUser,
-                "Application Status Updated",
-                "Your application for "
-                        + savedApplication.getJob().getTitle()
-                        + " is now: "
-                        + newStatus
-        );
-
-        return toResponse(savedApplication);
+        return list.stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ApplicationStatusHistoryResponse> getStatusHistory(
-            Integer applicationId
-    ) {
+    public ApplicationResponse getById(User user, Integer id) {
+        Application application = find(id);
+        assertCanView(user, application);
 
-        if (!applicationRepository.existsById(applicationId)) {
-            throw new RuntimeException("Application not found");
+        return toResponse(application);
+    }
+
+    @Transactional
+    public ApplicationResponse updateStatus(User user, Integer applicationId, String statusValue) {
+
+        Application application = find(applicationId);
+        ApplicationStatus newStatus = ApplicationStatus.fromLabel(statusValue);
+        ApplicationStatus current = ApplicationStatus.find(application.getStatus())
+                .orElse(ApplicationStatus.APPLIED);
+
+        if (currentUserService.isCandidate(user)) {
+            if (!application.getCandidate().getUser().getId().equals(user.getId())) {
+                throw new AccessDeniedException("You cannot modify this application");
+            }
+
+            if (newStatus != ApplicationStatus.WITHDRAWN) {
+                throw new AccessDeniedException("Candidates can only withdraw an application");
+            }
+        } else {
+            jobService.assertCanManage(user, application.getJob());
         }
+
+        if (current == newStatus) {
+            throw new BadRequestException("Application is already " + newStatus.getLabel());
+        }
+
+        if (current.isTerminal() && !currentUserService.isAdmin(user)) {
+            throw new BadRequestException(
+                    "This application is already " + current.getLabel()
+                            + " and can no longer be changed");
+        }
+
+        application.setStatus(newStatus.getLabel());
+
+        Application saved = applicationRepository.save(application);
+
+        saveHistory(saved, newStatus.getLabel());
+
+        // Tell the candidate (unless they made the change themselves)
+        if (!currentUserService.isCandidate(user)) {
+            notificationService.notify(saved.getCandidate().getUser(),
+                    "Application Status Updated",
+                    "Your application for " + saved.getJob().getTitle()
+                            + " is now: " + newStatus.getLabel());
+        }
+
+        return toResponse(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ApplicationStatusHistoryResponse> getStatusHistory(User user, Integer applicationId) {
+        Application application = find(applicationId);
+        assertCanView(user, application);
 
         return statusHistoryRepository
                 .findByApplicationIdOrderByChangedAtAsc(applicationId)
                 .stream()
-                .map(history -> new ApplicationStatusHistoryResponse(
-                        history.getId(),
-                        history.getApplication().getId(),
-                        history.getStatus(),
-                        history.getChangedAt()
-                ))
+                .map(h -> new ApplicationStatusHistoryResponse(
+                        h.getId(),
+                        applicationId,
+                        h.getStatus(),
+                        h.getChangedAt()))
                 .toList();
     }
 
-    private void saveStatusHistory(
-            Application application,
-            String status
-    ) {
+    @Transactional
+    public void delete(Integer id) {
+        if (!applicationRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Application not found");
+        }
 
-        ApplicationStatusHistory history =
-                new ApplicationStatusHistory();
+        applicationRepository.deleteById(id);
+    }
 
+    /** Valid status labels for dropdowns. */
+    public List<String> getAllowedStatuses() {
+        return ApplicationStatus.labels();
+    }
+
+    // --------------------------------------------------------------- helpers
+
+    public Application find(Integer id) {
+        return applicationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
+    }
+
+    /** The owning candidate, the job's employer, or an admin. */
+    public void assertCanView(User user, Application application) {
+        if (currentUserService.isCandidate(user)) {
+            if (application.getCandidate().getUser().getId().equals(user.getId())) {
+                return;
+            }
+            throw new AccessDeniedException("You cannot access this application");
+        }
+
+        jobService.assertCanManage(user, application.getJob());
+    }
+
+    private void saveHistory(Application application, String status) {
+        ApplicationStatusHistory history = new ApplicationStatusHistory();
         history.setApplication(application);
         history.setStatus(status);
         history.setChangedAt(LocalDateTime.now());
@@ -227,64 +257,16 @@ public class ApplicationService {
         statusHistoryRepository.save(history);
     }
 
-    private void createNotification(
-            User user,
-            String title,
-            String message
-    ) {
-
-        Notification notification = new Notification();
-
-        notification.setUser(user);
-        notification.setTitle(title);
-        notification.setMessage(message);
-        notification.setIsRead(false);
-        notification.setCreatedAt(LocalDateTime.now());
-
-        notificationRepository.save(notification);
-    }
-
-    private ApplicationResponse toResponse(Application application) {
-
-        String candidateName = null;
-
-        if (application.getCandidate() != null
-                && application.getCandidate().getUser() != null) {
-
-            candidateName =
-                    application.getCandidate()
-                            .getUser()
-                            .getName();
-        }
+    private ApplicationResponse toResponse(Application a) {
+        User candidateUser = a.getCandidate() != null ? a.getCandidate().getUser() : null;
 
         return new ApplicationResponse(
-                application.getId(),
-                application.getJob().getId(),
-                application.getJob().getTitle(),
-                application.getCandidate().getId(),
-                candidateName,
-                application.getStatus(),
-                application.getAppliedAt()
-        );
-    }
-
-    private boolean isAllowedStatus(String status) {
-
-        return status.equalsIgnoreCase("Applied")
-                || status.equalsIgnoreCase("Under Review")
-                || status.equalsIgnoreCase("Shortlisted")
-                || status.equalsIgnoreCase("Interview Scheduled")
-                || status.equalsIgnoreCase("Selected/Hired")
-                || status.equalsIgnoreCase("Rejected")
-                || status.equalsIgnoreCase("Withdrawn")
-                || status.equalsIgnoreCase("Screening")
-                || status.equalsIgnoreCase("Submitted to Employer")
-                || status.equalsIgnoreCase("Interview Completed")
-                || status.equalsIgnoreCase("Offer Extended")
-                || status.equalsIgnoreCase("Offer Accepted")
-                || status.equalsIgnoreCase("Hired/Placed")
-                || status.equalsIgnoreCase("On Hold")
-                || status.equalsIgnoreCase("Offer Declined")
-                || status.equalsIgnoreCase("Job Closed");
+                a.getId(),
+                a.getJob().getId(),
+                a.getJob().getTitle(),
+                a.getCandidate().getId(),
+                candidateUser != null ? candidateUser.getName() : null,
+                a.getStatus(),
+                a.getAppliedAt());
     }
 }

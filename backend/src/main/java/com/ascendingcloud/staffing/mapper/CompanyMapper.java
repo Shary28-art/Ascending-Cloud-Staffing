@@ -20,7 +20,8 @@ public class CompanyMapper {
                 company.getWebsite(),
                 company.getIndustry(),
                 company.getCompanySize(),
-                company.getLocation()
+                company.getLocation(),
+                company.getLogoUrl()
         );
     }
 }

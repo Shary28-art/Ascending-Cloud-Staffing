@@ -1,8 +1,10 @@
 package com.ascendingcloud.staffing.controller;
 
 import com.ascendingcloud.staffing.dto.CandidateSkillResponse;
+import com.ascendingcloud.staffing.security.CurrentUserService;
 import com.ascendingcloud.staffing.service.CandidateSkillService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,45 +14,40 @@ import java.util.List;
 public class CandidateSkillController {
 
     private final CandidateSkillService candidateSkillService;
+    private final CurrentUserService currentUserService;
 
-    public CandidateSkillController(CandidateSkillService candidateSkillService) {
+    public CandidateSkillController(
+            CandidateSkillService candidateSkillService,
+            CurrentUserService currentUserService) {
         this.candidateSkillService = candidateSkillService;
+        this.currentUserService = currentUserService;
     }
 
-    // Get all available skills
+    /** All available skills. */
     @GetMapping
     public ResponseEntity<List<CandidateSkillResponse>> getAllSkills() {
         return ResponseEntity.ok(candidateSkillService.getAllSkills());
     }
 
-    // Get skills assigned to a candidate
+    /** Skills on the logged-in candidate's profile. */
     @GetMapping("/me")
-    public ResponseEntity<List<CandidateSkillResponse>> getCandidateSkills(
-            @RequestParam String email
-    ) {
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<List<CandidateSkillResponse>> getCandidateSkills() {
         return ResponseEntity.ok(
-                candidateSkillService.getCandidateSkills(email)
-        );
+                candidateSkillService.getCandidateSkills(currentUserService.getUser()));
     }
 
-    // Add a skill to candidate profile
     @PostMapping("/me/{skillId}")
-    public ResponseEntity<CandidateSkillResponse> addSkill(
-            @RequestParam String email,
-            @PathVariable Integer skillId
-    ) {
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<CandidateSkillResponse> addSkill(@PathVariable Integer skillId) {
         return ResponseEntity.ok(
-                candidateSkillService.addSkill(email, skillId)
-        );
+                candidateSkillService.addSkill(currentUserService.getUser(), skillId));
     }
 
-    // Remove a skill from candidate profile
     @DeleteMapping("/me/{skillId}")
-    public ResponseEntity<Void> removeSkill(
-            @RequestParam String email,
-            @PathVariable Integer skillId
-    ) {
-        candidateSkillService.removeSkill(email, skillId);
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<Void> removeSkill(@PathVariable Integer skillId) {
+        candidateSkillService.removeSkill(currentUserService.getUser(), skillId);
         return ResponseEntity.noContent().build();
     }
 }

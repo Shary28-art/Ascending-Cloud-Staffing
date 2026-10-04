@@ -9,45 +9,42 @@ import java.util.List;
 @Service
 public class EmploymentTypeService {
 
-    private final EmploymentTypeRepository employmentTypeRepository;
+    private final EmploymentTypeRepository repository;
 
-    public EmploymentTypeService(
-            EmploymentTypeRepository employmentTypeRepository) {
-        this.employmentTypeRepository = employmentTypeRepository;
+    public EmploymentTypeService(EmploymentTypeRepository repository) {
+        this.repository = repository;
     }
 
-    public List<EmploymentType> getAllEmploymentTypes() {
-        return employmentTypeRepository.findAll();
+    public List<EmploymentType> getAll() {
+        return repository.findAll();
     }
 
-    public EmploymentType getEmploymentTypeById(Integer id) {
-        return employmentTypeRepository.findById(id)
+    public EmploymentType getById(Integer id) {
+        return repository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Employment type not found"));
     }
 
-    public EmploymentType createEmploymentType(
-            EmploymentType employmentType) {
-        return employmentTypeRepository.save(employmentType);
+    public EmploymentType create(EmploymentType employmentType) {
+        return repository.save(employmentType);
     }
 
-    public EmploymentType updateEmploymentType(
+    public EmploymentType update(
             Integer id,
             EmploymentType employmentType) {
 
-        EmploymentType existingEmploymentType =
-                getEmploymentTypeById(id);
+        EmploymentType existing = getById(id);
 
-        existingEmploymentType.setName(employmentType.getName());
+        existing.setName(employmentType.getName());
 
-        return employmentTypeRepository.save(existingEmploymentType);
+        return repository.save(existing);
     }
 
-    public void deleteEmploymentType(Integer id) {
-        if (!employmentTypeRepository.existsById(id)) {
+    public void delete(Integer id) {
+        if (!repository.existsById(id)) {
             throw new RuntimeException("Employment type not found");
         }
 
-        employmentTypeRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }

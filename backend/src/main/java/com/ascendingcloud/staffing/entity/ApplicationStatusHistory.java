@@ -24,6 +24,13 @@ public class ApplicationStatusHistory {
     public ApplicationStatusHistory() {
     }
 
+    @PrePersist
+    protected void onCreate() {
+        if (changedAt == null) {
+            changedAt = LocalDateTime.now();
+        }
+    }
+
     public Integer getId() {
         return id;
     }
