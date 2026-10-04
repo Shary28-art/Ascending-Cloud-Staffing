@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create your Ascending Cloud account to apply for jobs, save opportunities, and manage your profile.">
+    <meta name="description"
+        content="Create your Ascending Cloud account to apply for jobs, save opportunities, and manage your profile.">
     <title>Create Account | Ascending Cloud Staffing</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,38 +18,257 @@
     <main id="mainContent" class="page">
         <div class="container">
             <div class="panel login-panel">
+
                 <h1 class="login-title">Create Account</h1>
-                <p class="muted">Join Ascending Cloud to explore opportunities and manage applications.</p>
+                <p class="muted">
+                    Join Ascending Cloud to explore opportunities and manage applications.
+                </p>
 
-                <div class="field">
-                    <label for="name">Full Name</label>
-                    <input id="name" type="text" placeholder="Your full name" autocomplete="name" required>
-                </div>
-
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-                </div>
-
-                <div class="field">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" placeholder="Minimum 6 characters" autocomplete="new-password" required>
-                </div>
-
+                <!-- Account Type -->
                 <div class="field">
                     <label for="role">Account Type</label>
-                    <select id="role" aria-label="Account type">
+                    <select id="role" aria-label="Account type" onchange="toggleAccountFields()">
                         <option value="candidate">Candidate</option>
                         <option value="employer">Employer</option>
                     </select>
                 </div>
 
-                <button class="btn login-button" type="button" onclick="signupUser()">Create Account</button>
+
+                <!-- ================= CANDIDATE ================= -->
+                <div id="candidateFields">
+
+                    <div class="field">
+                        <label for="firstName">First Name</label>
+                        <input id="firstName" type="text"
+                            placeholder="Enter your first name"
+                            autocomplete="given-name" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" type="text"
+                            placeholder="Enter your last name"
+                            autocomplete="family-name" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email Address</label>
+                        <input id="email" type="email"
+                            placeholder="you@example.com"
+                            autocomplete="email" required>
+                        <small id="emailError" class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Phone Number</label>
+                        <input id="phone" type="tel"
+                            placeholder="10-digit phone number"
+                            autocomplete="tel"
+                            maxlength="10"
+                            minlength="10"
+                            inputmode="numeric" required>
+                        <small id="phoneError" class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="city">City</label>
+                        <input id="city" type="text"
+                            placeholder="Enter your city" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="state">State</label>
+                        <input id="state" type="text"
+                            placeholder="Enter your state" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="country">Country</label>
+                        <input id="country" type="text"
+                            placeholder="Enter your country" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input id="password" type="password"
+                            placeholder="Minimum 6 characters"
+                            autocomplete="new-password"
+                            minlength="6" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input id="confirmPassword" type="password"
+                            placeholder="Re-enter your password"
+                            autocomplete="new-password"
+                            minlength="6" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="jobTitle">Preferred Job Title</label>
+                        <input id="jobTitle" type="text"
+                            placeholder="e.g. Software Engineer" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="resume">Resume</label>
+                        <input id="resume" type="file"
+                            accept=".pdf,.doc,.docx" required>
+                        <small class="muted">
+                            Accepted formats: PDF, DOC, DOCX
+                        </small>
+                    </div>
+
+                    <div class="field">
+                        <label for="workAuthorization">
+                            Work Authorization Status
+                        </label>
+                        <select id="workAuthorization" required>
+                            <option value="">Select your status</option>
+                            <option value="authorized">Authorized to work</option>
+                            <option value="sponsorship-required">Requires sponsorship</option>
+                            <option value="visa-holder">Visa holder</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="field checkbox-field">
+                        <label>
+                            <input id="candidateTerms" type="checkbox" required>
+                            <span>
+                                I agree to the
+                                <a href="privacy-policy.html" target="_blank">
+                                    Privacy Policy
+                                </a>
+                                and
+                                <a href="terms.html" target="_blank">
+                                    Terms and Conditions
+                                </a>.
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="field checkbox-field">
+                        <label>
+                            <input id="recruitmentConsent" type="checkbox" required>
+                            <span>
+                                I consent to receive recruitment communications
+                                from Ascending Cloud Staffing.
+                            </span>
+                        </label>
+                    </div>
+
+                </div>
+
+
+                <!-- ================= EMPLOYER ================= -->
+                <div id="employerFields" style="display: none;">
+
+                    <div class="field">
+                        <label for="employerFirstName">
+                            Contact Person's First Name
+                        </label>
+                        <input id="employerFirstName" type="text"
+                            placeholder="Enter first name"
+                            autocomplete="given-name">
+                    </div>
+
+                    <div class="field">
+                        <label for="employerLastName">
+                            Contact Person's Last Name
+                        </label>
+                        <input id="employerLastName" type="text"
+                            placeholder="Enter last name"
+                            autocomplete="family-name">
+                    </div>
+
+                    <div class="field">
+                        <label for="workEmail">Work Email Address</label>
+                        <input id="workEmail" type="email"
+                            placeholder="name@company.com"
+                            autocomplete="email">
+                        <small id="workEmailError" class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="employerPhone">Phone Number</label>
+                        <input id="employerPhone" type="tel"
+                            placeholder="10-digit phone number"
+                            maxlength="10"
+                            minlength="10"
+                            inputmode="numeric">
+                        <small id="employerPhoneError" class="error-message"></small>
+                    </div>
+
+                    <div class="field">
+                        <label for="employerPassword">Password</label>
+                        <input id="employerPassword" type="password"
+                            placeholder="Minimum 6 characters"
+                            minlength="6"
+                            autocomplete="new-password">
+                    </div>
+
+                    <div class="field">
+                        <label for="employerConfirmPassword">
+                            Confirm Password
+                        </label>
+                        <input id="employerConfirmPassword" type="password"
+                            placeholder="Re-enter your password"
+                            minlength="6"
+                            autocomplete="new-password">
+                    </div>
+
+                    <div class="field">
+                        <label for="companyName">Company Name</label>
+                        <input id="companyName" type="text"
+                            placeholder="Enter company name">
+                    </div>
+
+                    <div class="field">
+                        <label for="employerJobTitle">
+                            Job Title / Position
+                        </label>
+                        <input id="employerJobTitle" type="text"
+                            placeholder="e.g. HR Manager">
+                    </div>
+
+                    <div class="field">
+                        <label for="companyWebsite">
+                            Company Website <span class="muted">(Optional)</span>
+                        </label>
+                        <input id="companyWebsite" type="url"
+                            placeholder="https://www.company.com">
+                    </div>
+
+                    <div class="field checkbox-field">
+                        <label>
+                            <input id="employerTerms" type="checkbox">
+                            <span>
+                                I agree to the
+                                <a href="privacy-policy.html" target="_blank">
+                                    Privacy Policy
+                                </a>
+                                and
+                                <a href="terms.html" target="_blank">
+                                    Terms and Conditions
+                                </a>.
+                            </span>
+                        </label>
+                    </div>
+
+                </div>
+
+
+                <button class="btn login-button" type="button"
+                    onclick="signupUser()">
+                    Create Account
+                </button>
 
                 <p class="login-create">
                     Already have an account?
                     <a href="login.html">Login</a>
                 </p>
+
             </div>
         </div>
     </main>

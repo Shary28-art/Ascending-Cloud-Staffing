@@ -4,88 +4,1173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Post cloud and technology job openings through the Ascending Cloud employer portal.">
+
+    <meta name="description"
+        content="Create and manage job postings for Ascending Cloud Staffing.">
+
     <title>Post a Job | Ascending Cloud Staffing</title>
+
     <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
-    <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+    <a class="skip-link" href="#mainContent">
+        Skip to main content
+    </a>
 
     <div id="siteNav"></div>
 
+
     <main id="mainContent" class="page">
+
         <div class="container">
+
+            <!-- =========================================
+                 PAGE HEADER
+            ========================================== -->
+
             <div class="page-title">
+
                 <div>
-                    <h1>Post a Job</h1>
-                    <p class="muted">Signed in as <span id="dashboardUserEmail"></span></p>
+
+                    <h1>
+                        Post a Job
+                    </h1>
+
+                    <p class="muted">
+                        Create a detailed job posting to find the right candidates.
+                    </p>
+
                 </div>
-                <button type="button" class="btn outline" onclick="logout()">Logout</button>
+
+
+                <a
+                    href="dashboard.html"
+                    class="btn outline">
+
+                    Back to Dashboard
+
+                </a>
+
             </div>
 
-            <div class="panel">
-                <form id="postJobForm" onsubmit="submitJobForm(event)">
+
+
+            <!-- =========================================
+                 JOB POSTING FORM
+            ========================================== -->
+
+            <form
+                id="jobPostingForm"
+                class="profile-form">
+
+
+                <!-- =====================================
+                     1 - 7 BASIC JOB INFORMATION
+                ====================================== -->
+
+                <section class="panel profile-section">
+
+                    <div class="profile-section-header">
+
+                        <div>
+
+                            <h2>
+                                Basic Job Information
+                            </h2>
+
+                            <p class="muted">
+                                Add the main details about the position.
+                            </p>
+
+                        </div>
+
+
+                        <span class="profile-completion">
+                            Job Details
+                        </span>
+
+                    </div>
+
+
                     <div class="form-grid">
-                        <div class="field">
-                            <label for="jobTitle">Job Title</label>
-                            <input id="jobTitle" type="text" required>
+
+
+                        <!-- 1. JOB TITLE -->
+
+                        <div class="form-group full-width">
+
+                            <label for="jobTitle">
+                                Job Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="jobTitle"
+                                placeholder="e.g. Senior Java Developer"
+                                required>
+
                         </div>
 
-                        <div class="field">
-                            <label for="jobCompany">Company</label>
-                            <input id="jobCompany" type="text" required>
+
+
+                        <!-- 2. JOB DESCRIPTION -->
+
+                        <div class="form-group full-width">
+
+                            <label for="jobDescription">
+                                Job Description
+                            </label>
+
+                            <textarea
+                                id="jobDescription"
+                                rows="6"
+                                placeholder="Describe the role, team, purpose of the position and opportunity..."
+                                required></textarea>
+
                         </div>
 
-                        <div class="field">
-                            <label for="jobLocation">Location</label>
-                            <input id="jobLocation" type="text" required>
+
+
+                        <!-- 3. DEPARTMENT -->
+
+                        <div class="form-group">
+
+                            <label for="department">
+                                Department / Job Category
+                            </label>
+
+                            <input
+                                type="text"
+                                id="department"
+                                placeholder="e.g. Engineering"
+                                required>
+
                         </div>
 
-                        <div class="field">
-                            <label for="jobPlatform">Cloud Platform</label>
-                            <select id="jobPlatform" required>
-                                <option value="AWS">AWS</option>
-                                <option value="Azure">Azure</option>
-                                <option value="GCP">GCP</option>
+
+
+                        <!-- 4. EMPLOYMENT TYPE -->
+
+                        <div class="form-group">
+
+                            <label for="employmentType">
+                                Employment Type
+                            </label>
+
+                            <select
+                                id="employmentType"
+                                required>
+
+                                <option value="">
+                                    Select employment type
+                                </option>
+
+                                <option value="Full-time">
+                                    Full-time
+                                </option>
+
+                                <option value="Part-time">
+                                    Part-time
+                                </option>
+
+                                <option value="Contract">
+                                    Contract
+                                </option>
+
+                                <option value="Contract-to-hire">
+                                    Contract-to-hire
+                                </option>
+
                             </select>
+
                         </div>
 
-                        <div class="field">
-                            <label for="jobType">Employment Type</label>
-                            <select id="jobType" required>
-                                <option value="Full-time">Full-time</option>
-                                <option value="Contract">Contract</option>
+
+
+                        <!-- 5. WORK ARRANGEMENT -->
+
+                        <div class="form-group">
+
+                            <label for="workArrangement">
+                                Work Arrangement
+                            </label>
+
+                            <select
+                                id="workArrangement"
+                                required>
+
+                                <option value="">
+                                    Select arrangement
+                                </option>
+
+                                <option value="Remote">
+                                    Remote
+                                </option>
+
+                                <option value="Hybrid">
+                                    Hybrid
+                                </option>
+
+                                <option value="Onsite">
+                                    Onsite
+                                </option>
+
                             </select>
+
                         </div>
 
-                        <div class="field">
-                            <label for="jobSalary">Salary Range</label>
-                            <input id="jobSalary" type="text" placeholder="e.g. $4000" required>
+
+
+                        <!-- 6. JOB LOCATION -->
+
+                        <div class="form-group">
+
+                            <label for="jobLocation">
+                                Job Location
+                            </label>
+
+                            <input
+                                type="text"
+                                id="jobLocation"
+                                placeholder="e.g. Noida, Delhi NCR"
+                                required>
+
                         </div>
+
+
+
+                        <!-- 7. SALARY -->
+
+                        <div class="form-group">
+
+                            <label for="salary">
+                                Salary Range / Hourly Rate
+                            </label>
+
+                            <input
+                                type="text"
+                                id="salary"
+                                placeholder="e.g. ₹8-12 LPA or ₹800/hour"
+                                required>
+
+                        </div>
+
                     </div>
 
-                    <div class="field">
-                        <label for="jobDescription">Job Description</label>
-                        <textarea id="jobDescription" rows="6" required></textarea>
+                </section>
+
+
+
+                <!-- =====================================
+                     8 - 13 EXPERIENCE & QUALIFICATIONS
+                ====================================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>
+                        Experience & Qualifications
+                    </h2>
+
+                    <p class="muted">
+                        Define the experience, skills and qualifications required.
+                    </p>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- 8. EXPERIENCE LEVEL -->
+
+                        <div class="form-group">
+
+                            <label for="experienceLevel">
+                                Required Experience Level
+                            </label>
+
+                            <select
+                                id="experienceLevel"
+                                required>
+
+                                <option value="">
+                                    Select experience level
+                                </option>
+
+                                <option value="Entry Level">
+                                    Entry Level
+                                </option>
+
+                                <option value="Junior">
+                                    Junior
+                                </option>
+
+                                <option value="Mid Level">
+                                    Mid Level
+                                </option>
+
+                                <option value="Senior">
+                                    Senior
+                                </option>
+
+                                <option value="Lead">
+                                    Lead
+                                </option>
+
+                                <option value="Executive">
+                                    Executive
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- 11. EDUCATION -->
+
+                        <div class="form-group">
+
+                            <label for="education">
+                                Education Requirements
+                                <span class="muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="education"
+                                placeholder="e.g. Bachelor's degree in Computer Science">
+
+                        </div>
+
+
+
+                        <!-- 12. CERTIFICATION -->
+
+                        <div class="form-group">
+
+                            <label for="certifications">
+                                Certification Requirements
+                                <span class="muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="certifications"
+                                placeholder="e.g. AWS Certified Developer">
+
+                        </div>
+
                     </div>
 
-                    <button type="submit" class="btn">Save Draft</button>
-                </form>
-            </div>
+
+
+                    <!-- 9. REQUIRED SKILLS -->
+
+                    <div class="form-group">
+
+                        <label for="requiredSkills">
+                            Required Skills & Qualifications
+                        </label>
+
+                        <textarea
+                            id="requiredSkills"
+                            rows="4"
+                            placeholder="e.g. Java, Spring Boot, React, SQL, REST APIs..."
+                            required></textarea>
+
+                        <small class="form-help">
+                            Separate skills using commas.
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- 10. PREFERRED SKILLS -->
+
+                    <div class="form-group">
+
+                        <label for="preferredSkills">
+                            Preferred Skills
+                            <span class="muted">
+                                (Optional)
+                            </span>
+                        </label>
+
+                        <textarea
+                            id="preferredSkills"
+                            rows="4"
+                            placeholder="Add any additional skills that would be beneficial for this role..."></textarea>
+
+                    </div>
+
+
+
+                    <!-- 13. RESPONSIBILITIES -->
+
+                    <div class="form-group">
+
+                        <label for="responsibilities">
+                            Key Responsibilities
+                        </label>
+
+                        <textarea
+                            id="responsibilities"
+                            rows="6"
+                            placeholder="Describe the main responsibilities and day-to-day duties of this position..."
+                            required></textarea>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     14 - 16 POSITION DETAILS
+                ====================================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>
+                        Position Details
+                    </h2>
+
+                    <p class="muted">
+                        Define the number of openings and important dates.
+                    </p>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- 14. NUMBER OF POSITIONS -->
+
+                        <div class="form-group">
+
+                            <label for="positions">
+                                Number of Available Positions
+                            </label>
+
+                            <input
+                                type="number"
+                                id="positions"
+                                min="1"
+                                value="1"
+                                required>
+
+                        </div>
+
+
+
+                        <!-- 15. APPLICATION DEADLINE -->
+
+                        <div class="form-group">
+
+                            <label for="applicationDeadline">
+                                Application Deadline
+                                <span class="muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <input
+                                type="date"
+                                id="applicationDeadline">
+
+                        </div>
+
+
+
+                        <!-- 16. START DATE -->
+
+                        <div class="form-group">
+
+                            <label for="startDate">
+                                Expected Start Date
+                                <span class="muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <input
+                                type="date"
+                                id="startDate">
+
+                        </div>
+
+
+
+                        <!-- 21. JOB STATUS -->
+
+                        <div class="form-group">
+
+                            <label for="jobStatus">
+                                Job Status
+                            </label>
+
+                            <select
+                                id="jobStatus"
+                                required>
+
+                                <option value="Draft">
+                                    Draft
+                                </option>
+
+                                <option value="Pending Approval">
+                                    Pending Approval
+                                </option>
+
+                                <option value="Active">
+                                    Active
+                                </option>
+
+                                <option value="Paused">
+                                    Paused
+                                </option>
+
+                                <option value="Filled">
+                                    Filled
+                                </option>
+
+                                <option value="Closed">
+                                    Closed
+                                </option>
+
+                                <option value="Expired">
+                                    Expired
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     17 - 19 WORK AUTHORIZATION
+                ====================================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>
+                        Work Authorization & Clearance
+                    </h2>
+
+                    <p class="muted">
+                        Specify work authorization, clearance and travel requirements.
+                    </p>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- 17. WORK AUTHORIZATION -->
+
+                        <div class="form-group">
+
+                            <label for="sponsorship">
+                                Work Authorization / Sponsorship
+                            </label>
+
+                            <select
+                                id="sponsorship">
+
+                                <option value="">
+                                    Select option
+                                </option>
+
+                                <option value="Authorized candidates only">
+                                    Authorized candidates only
+                                </option>
+
+                                <option value="Sponsorship available">
+                                    Sponsorship available
+                                </option>
+
+                                <option value="Sponsorship not available">
+                                    Sponsorship not available
+                                </option>
+
+                                <option value="Open to all candidates">
+                                    Open to all candidates
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- 18. SECURITY CLEARANCE -->
+
+                        <div class="form-group">
+
+                            <label for="securityClearance">
+                                Security Clearance Requirement
+                                <span class="muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <select id="securityClearance">
+
+                                <option value="None">
+                                    None
+                                </option>
+
+                                <option value="Required">
+                                    Required
+                                </option>
+
+                                <option value="Preferred">
+                                    Preferred
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- 19. TRAVEL -->
+
+                        <div class="form-group">
+
+                            <label for="travel">
+                                Travel Requirements
+                                <span class="muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <select id="travel">
+
+                                <option value="None">
+                                    No travel required
+                                </option>
+
+                                <option value="Occasional">
+                                    Occasional travel
+                                </option>
+
+                                <option value="Regular">
+                                    Regular travel
+                                </option>
+
+                                <option value="Frequent">
+                                    Frequent travel
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     20. APPLICATION & SCREENING
+                ====================================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>
+                        Application & Screening
+                    </h2>
+
+                    <p class="muted">
+                        Add screening questions or instructions for applicants.
+                    </p>
+
+
+                    <div class="form-group">
+
+                        <label for="screeningQuestions">
+                            Application Questions / Screening Requirements
+                            <span class="muted">
+                                (Optional)
+                            </span>
+                        </label>
+
+                        <textarea
+                            id="screeningQuestions"
+                            rows="5"
+                            placeholder="Add screening questions, assessment requirements or instructions for applicants..."></textarea>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     22. HIRING MANAGEMENT
+                ====================================== -->
+
+                <section class="panel profile-section">
+
+                    <div class="profile-section-header">
+
+                        <div>
+
+                            <h2>
+                                Hiring Management
+                            </h2>
+
+                            <p class="muted">
+                                Manage the person responsible for this job.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+
+                        <!-- 22. HIRING MANAGER -->
+
+                        <div class="form-group">
+
+                            <label for="hiringManager">
+                                Hiring Manager / Recruiter
+                            </label>
+
+                            <input
+                                type="text"
+                                id="hiringManager"
+                                placeholder="e.g. Priya Sharma"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =====================================
+                     ACTIONS
+                ====================================== -->
+
+                <div class="profile-save-bar">
+
+
+                    <!-- CANCEL -->
+
+                    <a
+                        href="dashboard.html"
+                        class="btn outline">
+
+                        Cancel
+
+                    </a>
+
+
+
+                    <!-- SAVE DRAFT -->
+
+                    <button
+                        type="button"
+                        class="btn light"
+                        onclick="saveJobDraft()">
+
+                        Save as Draft
+
+                    </button>
+
+
+
+                    <!-- SUBMIT FOR ADMIN APPROVAL -->
+
+                    <button
+                        type="submit"
+                        class="btn">
+
+                        Submit for Approval
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
         </div>
+
     </main>
+
 
     <div id="siteFooter"></div>
 
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
     <script>
-        if (!localStorage.getItem("loggedIn")) {
+
+
+        /* =========================================
+           EMPLOYER ACCESS CHECK
+        ========================================= */
+
+        if (
+            localStorage.getItem("loggedIn") !== "true"
+        ) {
+
             window.location.href = "../login.html";
-        } else if (localStorage.getItem("userRole") !== "employer") {
-            window.location.href = "../index.html";
+
         }
+        else if (
+            localStorage.getItem("userRole") !== "employer"
+        ) {
+
+            window.location.href = "../index.html";
+
+        }
+
+
+
+        /* =========================================
+           GET JOB FORM DATA
+        ========================================= */
+
+        function getJobFormData() {
+
+            return {
+
+                /* 1 */
+                jobTitle:
+                    document
+                        .getElementById("jobTitle")
+                        .value
+                        .trim(),
+
+
+                /* 2 */
+                jobDescription:
+                    document
+                        .getElementById("jobDescription")
+                        .value
+                        .trim(),
+
+
+                /* 3 */
+                department:
+                    document
+                        .getElementById("department")
+                        .value
+                        .trim(),
+
+
+                /* 4 */
+                employmentType:
+                    document
+                        .getElementById("employmentType")
+                        .value,
+
+
+                /* 5 */
+                workArrangement:
+                    document
+                        .getElementById("workArrangement")
+                        .value,
+
+
+                /* 6 */
+                jobLocation:
+                    document
+                        .getElementById("jobLocation")
+                        .value
+                        .trim(),
+
+
+                /* 7 */
+                salary:
+                    document
+                        .getElementById("salary")
+                        .value
+                        .trim(),
+
+
+                /* 8 */
+                experienceLevel:
+                    document
+                        .getElementById("experienceLevel")
+                        .value,
+
+
+                /* 9 */
+                requiredSkills:
+                    document
+                        .getElementById("requiredSkills")
+                        .value
+                        .trim(),
+
+
+                /* 10 */
+                preferredSkills:
+                    document
+                        .getElementById("preferredSkills")
+                        .value
+                        .trim(),
+
+
+                /* 11 */
+                education:
+                    document
+                        .getElementById("education")
+                        .value
+                        .trim(),
+
+
+                /* 12 */
+                certifications:
+                    document
+                        .getElementById("certifications")
+                        .value
+                        .trim(),
+
+
+                /* 13 */
+                responsibilities:
+                    document
+                        .getElementById("responsibilities")
+                        .value
+                        .trim(),
+
+
+                /* 14 */
+                positions:
+                    document
+                        .getElementById("positions")
+                        .value,
+
+
+                /* 15 */
+                applicationDeadline:
+                    document
+                        .getElementById("applicationDeadline")
+                        .value,
+
+
+                /* 16 */
+                startDate:
+                    document
+                        .getElementById("startDate")
+                        .value,
+
+
+                /* 17 */
+                sponsorship:
+                    document
+                        .getElementById("sponsorship")
+                        .value,
+
+
+                /* 18 */
+                securityClearance:
+                    document
+                        .getElementById("securityClearance")
+                        .value,
+
+
+                /* 19 */
+                travel:
+                    document
+                        .getElementById("travel")
+                        .value,
+
+
+                /* 20 */
+                screeningQuestions:
+                    document
+                        .getElementById("screeningQuestions")
+                        .value
+                        .trim(),
+
+
+                /* 21 */
+                jobStatus:
+                    document
+                        .getElementById("jobStatus")
+                        .value,
+
+
+                /* 22 */
+                hiringManager:
+                    document
+                        .getElementById("hiringManager")
+                        .value
+                        .trim()
+
+            };
+
+        }
+
+
+
+        /* =========================================
+           SAVE JOB AS DRAFT
+        ========================================== */
+
+        function saveJobDraft() {
+
+            const jobData =
+                getJobFormData();
+
+
+            jobData.jobStatus =
+                "Draft";
+
+
+            localStorage.setItem(
+                "employerJobDraft",
+                JSON.stringify(jobData)
+            );
+
+
+            showToast(
+                "Job saved as draft successfully!"
+            );
+
+        }
+
+
+
+        /* =========================================
+           SUBMIT JOB FOR ADMIN APPROVAL
+        ========================================== */
+
+        document
+            .getElementById("jobPostingForm")
+            .addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    const jobData =
+                        getJobFormData();
+
+
+                    /*
+                     * Job is NOT public immediately.
+                     * It first goes to admin approval.
+                     */
+
+                    jobData.jobStatus =
+                        "Pending Approval";
+
+
+                    localStorage.setItem(
+                        "employerJobDraft",
+                        JSON.stringify(jobData)
+                    );
+
+
+                    showToast(
+                        "Job submitted for admin approval!"
+                    );
+
+                }
+            );
+
+
+
+        /* =========================================
+           LOAD PREVIOUS DRAFT
+        ========================================== */
+
+        function loadJobDraft() {
+
+            const savedJob =
+                localStorage.getItem(
+                    "employerJobDraft"
+                );
+
+
+            if (!savedJob) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const jobData =
+                    JSON.parse(savedJob);
+
+
+                Object.keys(jobData).forEach(
+                    function (field) {
+
+                        const element =
+                            document.getElementById(field);
+
+
+                        if (
+                            element &&
+                            jobData[field] !== undefined
+                        ) {
+
+                            element.value =
+                                jobData[field];
+
+                        }
+
+                    }
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Unable to load saved job draft:",
+                    error
+                );
+
+            }
+
+        }
+
+
+
+        /* =========================================
+           LOAD DRAFT WHEN PAGE OPENS
+        ========================================== */
+
+        loadJobDraft();
+
+
     </script>
+
+
+
+    <!-- MAIN WEBSITE JAVASCRIPT -->
+
     <script src="../main.js"></script>
+
+
 </body>
 
 </html>

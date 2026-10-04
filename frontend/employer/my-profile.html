@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Manage your employer company profile at Ascending Cloud Staffing.">
+
+    <title>My Profile | Ascending Cloud Staffing</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+    <div id="siteNav"></div>
+
+    <main id="mainContent" class="page">
+
+        <div class="container">
+
+            <div class="page-title">
+
+                <div>
+                    <h1>My Profile</h1>
+                    <p class="muted">
+                        Manage your company information and hiring preferences.
+                    </p>
+                </div>
+
+                <a href="dashboard.html" class="btn outline">
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+
+            <form id="employerProfileForm" class="profile-form">
+
+                <!-- 1-6 COMPANY INFORMATION -->
+
+                <section class="panel profile-section">
+
+                    <div class="profile-section-header">
+
+                        <div>
+                            <h2>Company Information</h2>
+                            <p class="muted">
+                                Tell candidates about your organization.
+                            </p>
+                        </div>
+
+                        <span class="profile-completion">
+                            Company Profile
+                        </span>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="companyName">
+                                Company Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="companyName"
+                                placeholder="e.g. Ascending Cloud Staffing"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="companyLogo">
+                                Company Logo
+                            </label>
+
+                            <input
+                                type="file"
+                                id="companyLogo"
+                                accept="image/png,image/jpeg,image/webp">
+
+                            <small class="form-help">
+                                PNG, JPG or WEBP recommended.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="companyDescription">
+                                Company Description
+                            </label>
+
+                            <textarea
+                                id="companyDescription"
+                                rows="5"
+                                placeholder="Describe your company, culture and services..."
+                                required></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="industry">
+                                Industry
+                            </label>
+
+                            <input
+                                type="text"
+                                id="industry"
+                                placeholder="e.g. Information Technology"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="companySize">
+                                Company Size
+                            </label>
+
+                            <select id="companySize" required>
+
+                                <option value="">
+                                    Select company size
+                                </option>
+
+                                <option value="1-10 employees">
+                                    1-10 employees
+                                </option>
+
+                                <option value="11-50 employees">
+                                    11-50 employees
+                                </option>
+
+                                <option value="51-200 employees">
+                                    51-200 employees
+                                </option>
+
+                                <option value="201-500 employees">
+                                    201-500 employees
+                                </option>
+
+                                <option value="501-1000 employees">
+                                    501-1000 employees
+                                </option>
+
+                                <option value="1000+ employees">
+                                    1000+ employees
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="headquarters">
+                                Headquarters / Business Location
+                            </label>
+
+                            <input
+                                type="text"
+                                id="headquarters"
+                                placeholder="e.g. Noida, India"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="companyWebsite">
+                                Company Website
+                            </label>
+
+                            <input
+                                type="url"
+                                id="companyWebsite"
+                                placeholder="https://example.com"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 7-8 CONTACT -->
+
+                <section class="panel profile-section">
+
+                    <h2>Primary Contact</h2>
+
+                    <p class="muted">
+                        Provide the main contact person for staffing communication.
+                    </p>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="contactFirstName">
+                                First Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="contactFirstName"
+                                placeholder="First name"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="contactLastName">
+                                Last Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="contactLastName"
+                                placeholder="Last name"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="contactEmail">
+                                Contact Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="contactEmail"
+                                placeholder="contact@company.com"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="contactPhone">
+                                Contact Phone Number
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="contactPhone"
+                                maxlength="10"
+                                placeholder="10-digit phone number"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 9-12 HIRING REQUIREMENTS -->
+
+                <section class="panel profile-section">
+
+                    <h2>Hiring Preferences</h2>
+
+                    <p class="muted">
+                        Tell us what type of talent your organization needs.
+                    </p>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label for="hiringLocations">
+                                Hiring Locations
+                            </label>
+
+                            <textarea
+                                id="hiringLocations"
+                                rows="3"
+                                placeholder="e.g. Noida, Delhi, Bengaluru, Remote"
+                                required></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="employeeTypes">
+                                Types of Employees Needed
+                            </label>
+
+                            <select
+                                id="employeeTypes"
+                                multiple
+                                required>
+
+                                <option value="Full-time">
+                                    Full-time
+                                </option>
+
+                                <option value="Part-time">
+                                    Part-time
+                                </option>
+
+                                <option value="Contract">
+                                    Contract
+                                </option>
+
+                                <option value="Contract-to-hire">
+                                    Contract-to-hire
+                                </option>
+
+                            </select>
+
+                            <small class="form-help">
+                                Hold Ctrl while selecting multiple options.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="workArrangements">
+                                Preferred Work Arrangements
+                            </label>
+
+                            <select
+                                id="workArrangements"
+                                multiple
+                                required>
+
+                                <option value="Remote">
+                                    Remote
+                                </option>
+
+                                <option value="Hybrid">
+                                    Hybrid
+                                </option>
+
+                                <option value="Onsite">
+                                    Onsite
+                                </option>
+
+                            </select>
+
+                            <small class="form-help">
+                                Select all that apply.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="primaryRoles">
+                                Primary Roles / Skill Areas Being Hired
+                            </label>
+
+                            <textarea
+                                id="primaryRoles"
+                                rows="4"
+                                placeholder="e.g. Java, Cloud Engineering, DevOps, Data Science..."
+                                required></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="expectedHires">
+                                Expected Number of Hires
+                            </label>
+
+                            <input
+                                type="number"
+                                id="expectedHires"
+                                min="1"
+                                value="1"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="hiringTimeline">
+                                Hiring Timeline
+                            </label>
+
+                            <select id="hiringTimeline" required>
+
+                                <option value="">
+                                    Select timeline
+                                </option>
+
+                                <option value="Immediately">
+                                    Immediately
+                                </option>
+
+                                <option value="Within 2 weeks">
+                                    Within 2 weeks
+                                </option>
+
+                                <option value="Within 1 month">
+                                    Within 1 month
+                                </option>
+
+                                <option value="1-3 months">
+                                    1-3 months
+                                </option>
+
+                                <option value="3+ months">
+                                    3+ months
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 15-18 BILLING & STAFFING -->
+
+                <section class="panel profile-section">
+
+                    <h2>Staffing & Billing</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label for="billingAddress">
+                                Billing Address
+                            </label>
+
+                            <textarea
+                                id="billingAddress"
+                                rows="4"
+                                placeholder="Enter complete billing address..."
+                                required></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="staffingPlan">
+                                Selected Staffing Service / Plan
+                            </label>
+
+                            <select id="staffingPlan" required>
+
+                                <option value="">
+                                    Select staffing service
+                                </option>
+
+                                <option value="Direct Hire">
+                                    Direct Hire
+                                </option>
+
+                                <option value="Contract Staffing">
+                                    Contract Staffing
+                                </option>
+
+                                <option value="Contract-to-Hire">
+                                    Contract-to-Hire
+                                </option>
+
+                                <option value="Executive Search">
+                                    Executive Search
+                                </option>
+
+                                <option value="Recruitment Process Outsourcing">
+                                    Recruitment Process Outsourcing
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="interviewMethod">
+                                Preferred Interview Method
+                            </label>
+
+                            <select id="interviewMethod" required>
+
+                                <option value="">
+                                    Select interview method
+                                </option>
+
+                                <option value="Video Interview">
+                                    Video Interview
+                                </option>
+
+                                <option value="Phone Interview">
+                                    Phone Interview
+                                </option>
+
+                                <option value="In-person Interview">
+                                    In-person Interview
+                                </option>
+
+                                <option value="Panel Interview">
+                                    Panel Interview
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label class="checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    id="employerAgreement"
+                                    required>
+
+                                <span>
+                                    I agree to the employer terms and applicable placement fees.
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 19 NOTIFICATIONS -->
+
+                <section class="panel profile-section">
+
+                    <h2>Notification Preferences</h2>
+
+                    <p class="muted">
+                        Choose how you want to receive employer notifications.
+                    </p>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label class="checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    id="notifyEmail"
+                                    checked>
+
+                                <span>
+                                    Email notifications
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label class="checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    id="notifyJobApplications"
+                                    checked>
+
+                                <span>
+                                    Notifications for new job applications
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label class="checkbox-row">
+
+                                <input
+                                    type="checkbox"
+                                    id="notifyCandidateUpdates"
+                                    checked>
+
+                                <span>
+                                    Candidate and recruitment updates
+                                </span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- 20 AUTHORIZED TEAM MEMBERS -->
+
+                <section class="panel profile-section">
+
+                    <h2>Authorized Team Members</h2>
+
+                    <p class="muted">
+                        Optional. Add team members who are authorized to manage hiring.
+                    </p>
+
+                    <div class="form-group">
+
+                        <label for="authorizedTeamMembers">
+                            Authorized Team Members
+                        </label>
+
+                        <textarea
+                            id="authorizedTeamMembers"
+                            rows="4"
+                            placeholder="Enter names and email addresses of authorized team members..."></textarea>
+
+                    </div>
+
+                </section>
+
+
+                <div class="profile-save-bar">
+
+                    <a
+                        href="dashboard.html"
+                        class="btn outline">
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn">
+                        Save Profile
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <div id="siteFooter"></div>
+
+
+    <script>
+
+        if (localStorage.getItem("loggedIn") !== "true") {
+
+            window.location.href = "../login.html";
+
+        } else if (
+            localStorage.getItem("userRole") !== "employer"
+        ) {
+
+            window.location.href = "../index.html";
+
+        }
+
+
+        function getEmployerProfileData() {
+
+            const getValue = function (id) {
+
+                const element = document.getElementById(id);
+
+                return element
+                    ? element.value.trim()
+                    : "";
+
+            };
+
+
+            const getMultipleValues = function (id) {
+
+                const element = document.getElementById(id);
+
+                if (!element) {
+                    return [];
+                }
+
+                return Array.from(element.selectedOptions)
+                    .map(option => option.value);
+
+            };
+
+
+            return {
+
+                companyName: getValue("companyName"),
+
+                companyDescription:
+                    getValue("companyDescription"),
+
+                industry:
+                    getValue("industry"),
+
+                companySize:
+                    getValue("companySize"),
+
+                headquarters:
+                    getValue("headquarters"),
+
+                companyWebsite:
+                    getValue("companyWebsite"),
+
+                contactFirstName:
+                    getValue("contactFirstName"),
+
+                contactLastName:
+                    getValue("contactLastName"),
+
+                contactEmail:
+                    getValue("contactEmail"),
+
+                contactPhone:
+                    getValue("contactPhone"),
+
+                hiringLocations:
+                    getValue("hiringLocations"),
+
+                employeeTypes:
+                    getMultipleValues("employeeTypes"),
+
+                workArrangements:
+                    getMultipleValues("workArrangements"),
+
+                primaryRoles:
+                    getValue("primaryRoles"),
+
+                expectedHires:
+                    getValue("expectedHires"),
+
+                hiringTimeline:
+                    getValue("hiringTimeline"),
+
+                billingAddress:
+                    getValue("billingAddress"),
+
+                staffingPlan:
+                    getValue("staffingPlan"),
+
+                interviewMethod:
+                    getValue("interviewMethod"),
+
+                employerAgreement:
+                    document.getElementById("employerAgreement").checked,
+
+                notifyEmail:
+                    document.getElementById("notifyEmail").checked,
+
+                notifyJobApplications:
+                    document.getElementById("notifyJobApplications").checked,
+
+                notifyCandidateUpdates:
+                    document.getElementById("notifyCandidateUpdates").checked,
+
+                authorizedTeamMembers:
+                    getValue("authorizedTeamMembers")
+
+            };
+
+        }
+
+
+        document
+            .getElementById("employerProfileForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                const profileData =
+                    getEmployerProfileData();
+
+                localStorage.setItem(
+                    "employerProfile",
+                    JSON.stringify(profileData)
+                );
+
+                showToast(
+                    "Employer profile saved successfully!"
+                );
+
+            });
+
+
+        function loadEmployerProfile() {
+
+            const savedProfile =
+                localStorage.getItem("employerProfile");
+
+            if (!savedProfile) {
+                return;
+            }
+
+            const profileData =
+                JSON.parse(savedProfile);
+
+
+            Object.keys(profileData).forEach(function (field) {
+
+                const element =
+                    document.getElementById(field);
+
+                if (!element) {
+                    return;
+                }
+
+
+                if (element.type === "checkbox") {
+
+                    element.checked =
+                        Boolean(profileData[field]);
+
+                    return;
+
+                }
+
+
+                if (element.multiple) {
+
+                    const values =
+                        Array.isArray(profileData[field])
+                            ? profileData[field]
+                            : [];
+
+                    Array.from(element.options).forEach(function (option) {
+
+                        option.selected =
+                            values.includes(option.value);
+
+                    });
+
+                    return;
+
+                }
+
+
+                if (profileData[field] !== undefined) {
+
+                    element.value =
+                        profileData[field];
+
+                }
+
+            });
+
+        }
+
+
+        const phoneInput =
+            document.getElementById("contactPhone");
+
+        if (phoneInput) {
+
+            phoneInput.addEventListener("input", function () {
+
+                this.value =
+                    this.value.replace(/\D/g, "");
+
+                if (this.value.length > 10) {
+
+                    this.value =
+                        this.value.slice(0, 10);
+
+                }
+
+            });
+
+        }
+
+
+        loadEmployerProfile();
+
+    </script>
+
+
+    <script src="../main.js"></script>
+
+</body>
+
+</html>

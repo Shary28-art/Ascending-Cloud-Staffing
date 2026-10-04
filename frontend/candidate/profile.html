@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Manage your professional candidate profile and career preferences.">
+
+    <title>My Profile | Ascending Cloud Staffing</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#mainContent">Skip to main content</a>
+
+    <div id="siteNav"></div>
+
+    <main id="mainContent" class="page">
+
+        <div class="container">
+
+            <!-- PAGE HEADER -->
+            <div class="page-title">
+                <div>
+                    <h1>My Profile</h1>
+                    <p class="muted">
+                        Build a complete professional profile to help employers discover you.
+                    </p>
+                </div>
+
+                <a href="dashboard.html" class="btn outline">
+                    Back to Dashboard
+                </a>
+            </div>
+
+
+            <form id="candidateProfileForm" class="profile-form">
+
+
+                <!-- =========================
+                     PROFILE OVERVIEW
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <div class="profile-section-header">
+                        <div>
+                            <h2>Profile Overview</h2>
+                            <p class="muted">
+                                Introduce yourself professionally.
+                            </p>
+                        </div>
+
+                        <span class="profile-completion">
+                            Candidate Profile
+                        </span>
+                    </div>
+
+
+                    <div class="profile-identity">
+
+                        <div class="profile-big-avatar" id="profileAvatar">
+                            U
+                        </div>
+
+                        <div>
+                            <h3 id="profileDisplayName">User</h3>
+                            <p class="muted" id="profileDisplayEmail"></p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+                            <label for="headline">
+                                Professional Headline
+                            </label>
+
+                            <input
+                                type="text"
+                                id="headline"
+                                placeholder="e.g. Full Stack Developer | React | Java | Spring Boot"
+                            >
+                        </div>
+
+
+                        <div class="form-group full-width">
+                            <label for="summary">
+                                Professional Summary
+                            </label>
+
+                            <textarea
+                                id="summary"
+                                rows="5"
+                                placeholder="Write a short professional summary about yourself..."
+                            ></textarea>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="currentJobTitle">
+                                Current / Most Recent Job Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="currentJobTitle"
+                                placeholder="e.g. Software Developer"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="experienceYears">
+                                Total Years of Experience
+                            </label>
+
+                            <input
+                                type="number"
+                                id="experienceYears"
+                                min="0"
+                                step="0.5"
+                                placeholder="e.g. 2"
+                            >
+                        </div>
+
+
+                        <div class="form-group full-width">
+                            <label for="desiredJobTitle">
+                                Desired Job Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="desiredJobTitle"
+                                placeholder="e.g. Full Stack Developer"
+                            >
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     TECHNICAL SKILLS
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Key Technical Skills</h2>
+
+                    <p class="muted">
+                        Add technologies, tools and skills relevant to your career.
+                    </p>
+
+                    <div class="form-group">
+
+                        <label for="technicalSkills">
+                            Technical Skills
+                        </label>
+
+                        <textarea
+                            id="technicalSkills"
+                            rows="3"
+                            placeholder="e.g. Java, Spring Boot, React, JavaScript, Python, MySQL"
+                        ></textarea>
+
+                        <small class="form-help">
+                            Separate skills using commas.
+                        </small>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     WORK EXPERIENCE
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <div class="profile-section-header">
+
+                        <div>
+                            <h2>Work Experience</h2>
+
+                            <p class="muted">
+                                Add your most recent or relevant professional experience.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="experience-card">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label for="companyName">
+                                    Company Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="companyName"
+                                    placeholder="Company name"
+                                >
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="experienceJobTitle">
+                                    Job Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="experienceJobTitle"
+                                    placeholder="Job title"
+                                >
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="employmentStart">
+                                    Start Date
+                                </label>
+
+                                <input
+                                    type="month"
+                                    id="employmentStart"
+                                >
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="employmentEnd">
+                                    End Date
+                                </label>
+
+                                <input
+                                    type="month"
+                                    id="employmentEnd"
+                                >
+                            </div>
+
+
+                            <div class="form-group full-width">
+
+                                <label for="responsibilities">
+                                    Key Responsibilities & Accomplishments
+                                </label>
+
+                                <textarea
+                                    id="responsibilities"
+                                    rows="5"
+                                    placeholder="Describe your responsibilities, achievements and important contributions..."
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     EDUCATION
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Education</h2>
+
+                    <p class="muted">
+                        Add your highest or most relevant qualification.
+                    </p>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="schoolName">
+                                School / University Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="schoolName"
+                                placeholder="e.g. ABC University"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="degree">
+                                Degree / Qualification
+                            </label>
+
+                            <input
+                                type="text"
+                                id="degree"
+                                placeholder="e.g. B.Tech"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="fieldOfStudy">
+                                Field of Study
+                            </label>
+
+                            <input
+                                type="text"
+                                id="fieldOfStudy"
+                                placeholder="e.g. Computer Science"
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="graduationYear">
+                                Graduation Year
+                            </label>
+
+                            <input
+                                type="number"
+                                id="graduationYear"
+                                placeholder="e.g. 2027"
+                            >
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     CERTIFICATIONS & RESUME
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Certifications & Resume</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label for="certifications">
+                                Professional Certifications
+                            </label>
+
+                            <textarea
+                                id="certifications"
+                                rows="3"
+                                placeholder="e.g. AWS Cloud Practitioner, Java Certification"
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+    <label for="resume">
+        Resume Upload
+    </label>
+
+    <input
+        type="file"
+        id="resume"
+        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    >
+
+    <small class="form-help">
+        Accepted formats: PDF, DOC, DOCX. PDF is preferred. Maximum file size: 5 MB.
+    </small>
+
+    <p
+        id="resumeError"
+        class="form-error"
+        style="display: none;"
+    ></p>
+
+    <p
+        id="resumeName"
+        class="resume-name"
+    ></p>
+
+    <button
+        type="button"
+        id="replaceResumeBtn"
+        class="btn outline"
+        style="display: none; margin-top: 10px;"
+    >
+        Replace Resume
+    </button>
+
+</div>
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     LINKS
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Professional Links</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="linkedin">
+                                LinkedIn URL
+                            </label>
+
+                            <input
+                                type="url"
+                                id="linkedin"
+                                placeholder="https://linkedin.com/in/yourname"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="portfolio">
+                                Portfolio URL
+                            </label>
+
+                            <input
+                                type="url"
+                                id="portfolio"
+                                placeholder="https://yourportfolio.com"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     JOB PREFERENCES
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Job Preferences</h2>
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label for="employmentType">
+                                Preferred Employment Type
+                            </label>
+
+                            <select id="employmentType">
+
+                                <option value="">
+                                    Select employment type
+                                </option>
+
+                                <option value="Full-time">
+                                    Full-time
+                                </option>
+
+                                <option value="Part-time">
+                                    Part-time
+                                </option>
+
+                                <option value="Contract">
+                                    Contract
+                                </option>
+
+                                <option value="Internship">
+                                    Internship
+                                </option>
+
+                                <option value="Freelance">
+                                    Freelance
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="workArrangement">
+                                Preferred Work Arrangement
+                            </label>
+
+                            <select id="workArrangement">
+
+                                <option value="">
+                                    Select arrangement
+                                </option>
+
+                                <option value="Remote">
+                                    Remote
+                                </option>
+
+                                <option value="Hybrid">
+                                    Hybrid
+                                </option>
+
+                                <option value="On-site">
+                                    On-site
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="preferredLocation">
+                                Preferred Job Location
+                            </label>
+
+                            <input
+                                type="text"
+                                id="preferredLocation"
+                                placeholder="e.g. Delhi NCR, Bengaluru, Remote"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="salaryExpectation">
+                                Salary / Hourly Rate Expectation
+                            </label>
+
+                            <input
+                                type="text"
+                                id="salaryExpectation"
+                                placeholder="e.g. ₹8 LPA or ₹500/hour"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="availability">
+                                Availability / Start Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="availability"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     WORK AUTHORIZATION
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Work Authorization</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="workAuthorization">
+                                Work Authorization Status
+                            </label>
+
+                            <select id="workAuthorization">
+
+                                <option value="">
+                                    Select status
+                                </option>
+
+                                <option value="Authorized">
+                                    Authorized to work
+                                </option>
+
+                                <option value="Requires Authorization">
+                                    Requires authorization
+                                </option>
+
+                                <option value="Student">
+                                    Student / Graduate
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="sponsorship">
+                                Sponsorship Requirement
+                            </label>
+
+                            <select id="sponsorship">
+
+                                <option value="">
+                                    Select option
+                                </option>
+
+                                <option value="No">
+                                    No sponsorship required
+                                </option>
+
+                                <option value="Yes">
+                                    Sponsorship required
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="securityClearance">
+                                Security Clearance
+                            </label>
+
+                            <select id="securityClearance">
+
+                                <option value="">
+                                    Select status
+                                </option>
+
+                                <option value="None">
+                                    None
+                                </option>
+
+                                <option value="Active">
+                                    Active
+                                </option>
+
+                                <option value="Expired">
+                                    Expired
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     VISIBILITY
+                ========================== -->
+
+                <section class="panel profile-section">
+
+                    <h2>Profile Visibility</h2>
+
+                    <div class="visibility-box">
+
+                        <div>
+
+                            <strong>
+                                Allow employers to discover my profile
+                            </strong>
+
+                            <p class="muted">
+                                When enabled, employers can view your professional
+                                profile and contact you about suitable opportunities.
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="profileVisibility"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================
+                     SAVE
+                ========================== -->
+
+                <div class="profile-save-bar">
+
+                    <a
+                        href="dashboard.html"
+                        class="btn outline"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn"
+                    >
+                        Save Profile
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <div id="siteFooter"></div>
+
+
+    <script>
+
+        if (!localStorage.getItem("loggedIn")) {
+
+            window.location.href = "../login.html";
+
+        } else if (
+            localStorage.getItem("userRole") !== "candidate"
+        ) {
+
+            window.location.href = "../index.html";
+
+        }
+
+
+        function loadProfileData() {
+
+            const userName =
+                localStorage.getItem("userName") || "User";
+
+            const userEmail =
+                localStorage.getItem("userEmail") || "";
+
+            document.getElementById("profileDisplayName").textContent =
+                userName;
+
+            document.getElementById("profileDisplayEmail").textContent =
+                userEmail;
+
+            document.getElementById("profileAvatar").textContent =
+                userName.charAt(0).toUpperCase();
+
+
+            const fields = [
+                "headline",
+                "summary",
+                "currentJobTitle",
+                "experienceYears",
+                "desiredJobTitle",
+                "technicalSkills",
+                "companyName",
+                "experienceJobTitle",
+                "employmentStart",
+                "employmentEnd",
+                "responsibilities",
+                "schoolName",
+                "degree",
+                "fieldOfStudy",
+                "graduationYear",
+                "certifications",
+                "linkedin",
+                "portfolio",
+                "employmentType",
+                "workArrangement",
+                "preferredLocation",
+                "salaryExpectation",
+                "availability",
+                "workAuthorization",
+                "sponsorship",
+                "securityClearance"
+            ];
+
+
+            fields.forEach(function (field) {
+
+                const element =
+                    document.getElementById(field);
+
+                const savedValue =
+                    localStorage.getItem("profile_" + field);
+
+                if (element && savedValue !== null) {
+
+                    element.value = savedValue;
+
+                }
+
+            });
+
+
+            const visibility =
+                localStorage.getItem("profile_visibility");
+
+            if (visibility !== null) {
+
+                document.getElementById("profileVisibility").checked =
+                    visibility === "true";
+
+            }
+
+const savedResume =
+    localStorage.getItem("profile_resume");
+
+if (savedResume) {
+
+    document.getElementById("resumeName").textContent =
+        "Current resume: " + savedResume;
+
+    document.getElementById("replaceResumeBtn").style.display =
+        "inline-block";
+
+}
+
+        }
+
+/* =========================================
+   RESUME VALIDATION
+========================================= */
+
+const resumeInput =
+    document.getElementById("resume");
+
+const resumeName =
+    document.getElementById("resumeName");
+
+const resumeError =
+    document.getElementById("resumeError");
+
+const replaceResumeBtn =
+    document.getElementById("replaceResumeBtn");
+
+
+const MAX_RESUME_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_RESUME_EXTENSIONS = [
+    "pdf",
+    "doc",
+    "docx"
+];
+
+
+function showResumeError(message) {
+
+    resumeError.textContent = message;
+    resumeError.style.display = "block";
+
+}
+
+
+function clearResumeError() {
+
+    resumeError.textContent = "";
+    resumeError.style.display = "none";
+
+}
+
+
+function validateResume(file) {
+
+    if (!file) {
+        return false;
+    }
+
+
+    const fileName =
+        file.name.toLowerCase();
+
+    const extension =
+        fileName.substring(
+            fileName.lastIndexOf(".") + 1
+        );
+
+
+    /* FILE TYPE CHECK */
+
+    if (
+        !ALLOWED_RESUME_EXTENSIONS.includes(
+            extension
+        )
+    ) {
+
+        showResumeError(
+            "Invalid file type. Please upload a PDF, DOC, or DOCX file."
+        );
+
+        return false;
+
+    }
+
+
+    /* FILE SIZE CHECK */
+
+    if (file.size > MAX_RESUME_SIZE) {
+
+        showResumeError(
+            "Resume file size must be 5 MB or less."
+        );
+
+        return false;
+
+    }
+
+
+    clearResumeError();
+
+    return true;
+
+}
+
+
+/* =========================================
+   RESUME FILE SELECTION
+========================================= */
+
+resumeInput.addEventListener(
+    "change",
+    function () {
+
+        clearResumeError();
+
+
+        if (!this.files || this.files.length === 0) {
+
+            return;
+
+        }
+
+
+        const file = this.files[0];
+
+
+        if (!validateResume(file)) {
+
+            this.value = "";
+
+            return;
+
+        }
+
+
+        resumeName.textContent =
+            "Selected: " + file.name;
+
+        replaceResumeBtn.style.display =
+            "inline-block";
+
+    }
+);
+
+
+/* =========================================
+   REPLACE RESUME
+========================================= */
+
+replaceResumeBtn.addEventListener(
+    "click",
+    function () {
+
+        clearResumeError();
+
+        resumeInput.click();
+
+    }
+);
+
+
+        document
+            .getElementById("candidateProfileForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+
+                const fields = [
+                    "headline",
+                    "summary",
+                    "currentJobTitle",
+                    "experienceYears",
+                    "desiredJobTitle",
+                    "technicalSkills",
+                    "companyName",
+                    "experienceJobTitle",
+                    "employmentStart",
+                    "employmentEnd",
+                    "responsibilities",
+                    "schoolName",
+                    "degree",
+                    "fieldOfStudy",
+                    "graduationYear",
+                    "certifications",
+                    "linkedin",
+                    "portfolio",
+                    "employmentType",
+                    "workArrangement",
+                    "preferredLocation",
+                    "salaryExpectation",
+                    "availability",
+                    "workAuthorization",
+                    "sponsorship",
+                    "securityClearance"
+                ];
+
+
+                fields.forEach(function (field) {
+
+                    const element =
+                        document.getElementById(field);
+
+                    if (element) {
+
+                        localStorage.setItem(
+                            "profile_" + field,
+                            element.value
+                        );
+
+                    }
+
+                });
+
+
+                const visibility =
+                    document.getElementById("profileVisibility");
+
+                localStorage.setItem(
+                    "profile_visibility",
+                    visibility.checked
+                );
+
+
+                const resume =
+    document.getElementById("resume");
+
+
+/* =========================================
+   FINAL RESUME VALIDATION BEFORE SAVE
+========================================= */
+
+if (resume.files.length > 0) {
+
+    const selectedResume =
+        resume.files[0];
+
+
+    if (!validateResume(selectedResume)) {
+
+        resume.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "profile_resume",
+        selectedResume.name
+    );
+
+
+    resumeName.textContent =
+        "Current resume: " +
+        selectedResume.name;
+
+
+    replaceResumeBtn.style.display =
+        "inline-block";
+
+}
+
+                showToast("Profile saved successfully!");
+
+            });
+
+
+        loadProfileData();
+
+    </script>
+
+
+    <script src="../main.js"></script>
+
+</body>
+
+</html>

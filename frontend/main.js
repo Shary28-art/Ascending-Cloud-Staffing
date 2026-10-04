@@ -111,18 +111,13 @@ function isJobsPage() {
 function pageLink(relativePath) {
     const normalized = relativePath.replace(/\\/g, "/");
 
-    if (normalized === "../jobs.html" || normalized.startsWith("../jobs.html?")) {
-        const query = normalized.includes("?") ? normalized.slice(normalized.indexOf("?")) : "";
-        if (isSubfolderPage()) {
-            return `../jobs.html${query}`;
-        }
-        return `jobs.html${query}`;
+    // Already going one level up
+    if (normalized.startsWith("../")) {
+        return normalized;
     }
 
+    // Pages inside candidate/employer folders
     if (isSubfolderPage()) {
-        if (normalized.startsWith("../")) {
-            return normalized;
-        }
         return `../${normalized}`;
     }
 
@@ -132,13 +127,14 @@ function pageLink(relativePath) {
 function getDashboardPath(role) {
     const dashboards = {
         candidate: "candidate/dashboard.html",
-        employer: "employer/post-job.html",
+        employer: "employer/dashboard.html",
         recruiter: "index.html",
         admin: "index.html"
     };
 
     return dashboards[role] || "index.html";
 }
+
 
 
 // =====================================================
@@ -149,19 +145,63 @@ function navbar() {
     const loggedIn = isLoggedIn();
     const role = localStorage.getItem("userRole");
 
+    const userName = localStorage.getItem("userName") || "User";
+    const userEmail = localStorage.getItem("userEmail") || "";
+    const userInitial = userName.charAt(0).toUpperCase();
+
+    const logoPath = isSubfolderPage()
+        ? "../assets/main-logo.jpeg"
+        : "assets/main-logo.jpeg";
+
     const authActions = loggedIn
         ? `
+            <div class="profile-menu">
+                <button type="button" class="profile-button" onclick="toggleProfileMenu()">
+                    <span class="profile-avatar">${escapeHtml(userInitial)}</span>
+                    <span class="profile-name">${escapeHtml(userName)}</span>
+                </button>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header">
+                        <span class="profile-avatar large">${escapeHtml(userInitial)}</span>
+
+                        <div>
+                            <strong>${escapeHtml(userName)}</strong>
+                            <small>${escapeHtml(userEmail)}</small>
+                        </div>
+                    </div>
+
+                    <div class="profile-dropdown-divider"></div>
+                     <a href="${pageLink(
+                     role === "employer"
+                     ? "employer/my-profile.html"
+                    : "candidate/profile.html"
+                    )}" class="profile-dropdown-link">
+                        My Profile
+                    </a>
+                    <a href="${pageLink(
+                     role === "employer"
+                    ? "employer/my-profile.html"
+                     : "candidate/profile.html"
+                    )}" class="profile-dropdown-link">
+                        Account Settings
+                    </a>
+              
+                    <button type="button" class="profile-dropdown-link logout-link" onclick="logout()">
+                        Logout
+                    </button>
+                </div>
+            </div>
+
             <a href="${pageLink(getDashboardPath(role))}" class="btn light">
                 Dashboard
             </a>
-            <button type="button" class="btn outline" onclick="logout()">
-                Logout
-            </button>
         `
         : `
             <a href="${pageLink("login.html")}" class="btn light">
                 Candidate Login
             </a>
+
             <a href="${pageLink("login.html?role=employer")}" class="btn">
                 Employer Login
             </a>
@@ -170,12 +210,8 @@ function navbar() {
     return `
         <header class="header">
             <div class="container nav">
-              <a href="${pageLink("index.html")}" class="logo">
-    <img
-        src="assets/ascending-cloud-logo.jpeg"
-        alt="Ascending Cloud Staffing"
-        class="company-logo"
-    />
+<a href="${pageLink("index.html")}" class="logo">
+    <img src="${logoPath}" alt="Ascending Cloud Logo">
 </a>
 
                 <button
@@ -202,6 +238,7 @@ function navbar() {
                 <div class="actions">
                     ${authActions}
                 </div>
+
             </div>
         </header>
     `;
@@ -551,13 +588,80 @@ function displayJobDetails() {
             </div>
 
             <div class="job-actions">
-                <a href="${pageLink("login.html")}" class="btn">Apply Now</a>
+                <button
+    type="button"
+    class="btn"
+    onclick="applyForJob(${job.id})"
+>
+    Apply Now
+</button>
                 <button type="button" class="btn light" onclick="saveJob(${job.id})">
                     Save Job
                 </button>
             </div>
         </article>
     `;
+}
+function applyForJob(jobId) {
+
+    if (!isLoggedIn()) {
+        showToast("Please login to apply for this job.");
+
+        setTimeout(() => {
+            window.location.href =
+                pageLink("login.html");
+        }, 800);
+
+        return;
+    }
+
+    const role =
+        localStorage.getItem("userRole");
+
+    if (role !== "candidate") {
+        showToast("Only candidates can apply for jobs.");
+        return;
+    }
+
+    let applications =
+        JSON.parse(
+            localStorage.getItem("applications")
+        ) || [];
+
+    const alreadyApplied =
+        applications.some(
+            application =>
+                application.jobId === Number(jobId)
+        );
+
+    if (alreadyApplied) {
+        showToast("You have already applied for this job.");
+        return;
+    }
+
+    const job =
+        getJobById(jobId);
+
+    if (!job) {
+        showToast("Job not found.");
+        return;
+    }
+
+    applications.push({
+        jobId: Number(jobId),
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        appliedAt: new Date().toISOString(),
+        status: "Applied"
+    });
+
+    localStorage.setItem(
+        "applications",
+        JSON.stringify(applications)
+    );
+
+    showToast("Application submitted successfully!");
 }
 
 
@@ -646,7 +750,15 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 3000);
 }
+function toggleProfileMenu() {
+    const dropdown = document.getElementById("profileDropdown");
 
+    if (!dropdown) {
+        return;
+    }
+
+    dropdown.classList.toggle("show");
+}
 
 function toggleMenu(button) {
     const navLinks = document.getElementById("primaryNav");
@@ -691,10 +803,12 @@ function loginUser() {
         showToast("Password must be at least 6 characters.");
         return;
     }
+localStorage.setItem("loggedIn", "true");
+localStorage.setItem("userRole", roleElement.value);
+localStorage.setItem("userEmail", email);
 
-    localStorage.setItem("loggedIn", "true");
-    localStorage.setItem("userRole", roleElement.value);
-    localStorage.setItem("userEmail", email);
+const userName = email.split("@")[0];
+localStorage.setItem("userName", userName);
 
     showToast("Login successful.");
 
@@ -879,6 +993,7 @@ function submitHireForm(event) {
 }
 
 function submitJobForm(event) {
+
     if (event) {
         event.preventDefault();
     }
@@ -887,11 +1002,85 @@ function submitJobForm(event) {
         return;
     }
 
-    showToast("Job posting saved as a draft.");
-    const form = document.getElementById("postJobForm");
-    if (form) {
-        form.reset();
-    }
+
+    const fields = [
+
+        "jobTitle",
+        "jobCompany",
+        "jobCategory",
+        "jobType",
+        "workArrangement",
+        "jobLocation",
+        "jobSalary",
+        "experienceLevel",
+        "jobDescription",
+
+        "requiredSkills",
+        "preferredSkills",
+        "educationRequirements",
+        "certificationRequirements",
+
+        "keyResponsibilities",
+        "numberOfPositions",
+        "applicationDeadline",
+        "expectedStartDate",
+        "workAuthorization",
+        "securityClearance",
+        "travelRequirements",
+
+        "applicationQuestions",
+
+        "jobStatus",
+        "hiringManager",
+
+        "jobPlatform"
+
+    ];
+
+
+    /*
+     * Save job information temporarily
+     * in localStorage.
+     *
+     * Backend integration will replace
+     * this later.
+     */
+
+    fields.forEach(function (field) {
+
+        const element =
+            document.getElementById(field);
+
+        if (element) {
+
+            localStorage.setItem(
+                "job_" + field,
+                element.value
+            );
+
+        }
+
+    });
+
+
+    /*
+     * Create a unique job ID
+     */
+
+    const jobId =
+        "JOB-" + Date.now();
+
+
+    localStorage.setItem(
+        "job_id",
+        jobId
+    );
+
+
+    showToast(
+        "Job posting saved successfully!"
+    );
+
 }
 
 function subscribeNewsletter(event) {
@@ -1019,3 +1208,122 @@ document.addEventListener("DOMContentLoaded", function () {
     loadSavedJobs();
     loadDashboardUser();
 });
+
+
+    // =====================================================
+// SIGNUP EMAIL & PHONE VALIDATION
+// =====================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+
+    // -----------------------------
+    // EMAIL VALIDATION
+    // -----------------------------
+
+    if (emailInput) {
+
+        emailInput.addEventListener("input", function () {
+
+            const emailError =
+                document.getElementById("emailError");
+
+            if (!emailError) {
+                return;
+            }
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (this.value.trim() === "") {
+
+                emailError.textContent = "";
+
+            } else if (!emailPattern.test(this.value.trim())) {
+
+                emailError.textContent =
+                    "Please enter a valid email address.";
+
+            } else {
+
+                emailError.textContent = "";
+
+            }
+
+        });
+
+    }
+
+
+    // -----------------------------
+    // PHONE VALIDATION
+    // -----------------------------
+
+    if (phoneInput) {
+
+        phoneInput.addEventListener("input", function () {
+
+            const phoneError =
+                document.getElementById("phoneError");
+
+            if (!phoneError) {
+                return;
+            }
+
+            // Only allow numbers
+            this.value =
+                this.value.replace(/\D/g, "");
+
+            if (this.value === "") {
+
+                phoneError.textContent = "";
+
+            } else if (
+                !/^[6-9][0-9]{9}$/.test(this.value)
+            ) {
+
+                phoneError.textContent =
+                    "Please enter a valid 10-digit phone number.";
+
+            } else {
+
+                phoneError.textContent = "";
+
+            }
+
+        });
+
+    }
+
+});
+
+
+// =====================================================
+// ACCOUNT TYPE TOGGLE
+// =====================================================
+
+function toggleAccountFields() {
+
+    const roleElement =
+        document.getElementById("role");
+
+    const candidateFields =
+        document.getElementById("candidateFields");
+
+    const employerFields =
+        document.getElementById("employerFields");
+
+    if (!roleElement || !candidateFields || !employerFields) {
+        return;
+    }
+
+    const role = roleElement.value;
+
+    candidateFields.style.display =
+        role === "candidate" ? "block" : "none";
+
+    employerFields.style.display =
+        role === "employer" ? "block" : "none";
+}

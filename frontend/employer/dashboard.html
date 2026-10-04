@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Employer dashboard for managing company profile, jobs and hiring activities.">
+
+    <title>Employer Dashboard | Ascending Cloud Staffing</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#mainContent">
+        Skip to main content
+    </a>
+
+    <!-- NAVBAR -->
+    <div id="siteNav"></div>
+
+
+    <main id="mainContent" class="page">
+
+        <div class="container">
+
+            <!-- PAGE HEADER -->
+            <div class="page-title">
+
+                <div>
+                    <h1>Employer Dashboard</h1>
+
+                    <p class="muted">
+                        Manage your company profile, jobs and hiring activities.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn outline"
+                    onclick="logout()">
+                    Logout
+                </button>
+
+            </div>
+
+
+            <!-- DASHBOARD CARDS -->
+            <div class="form-grid">
+
+
+                <!-- COMPANY PROFILE -->
+                <section class="panel">
+
+                    <h2>Company Profile</h2>
+
+                    <p class="muted">
+                        Complete and manage your company information,
+                        contact details and hiring preferences.
+                    </p>
+
+                    <a
+                        href="my-profile.html"
+                        class="btn">
+                        My Company Profile
+                    </a>
+
+                </section>
+
+
+                <!-- POST JOB -->
+                <section class="panel">
+
+                    <h2>Post a Job</h2>
+
+                    <p class="muted">
+                        Create a new job posting with requirements,
+                        responsibilities and hiring details.
+                    </p>
+
+                    <a
+                        href="post-job.html"
+                        class="btn">
+                        Post New Job
+                    </a>
+
+                </section>
+
+
+                <!-- MANAGE JOBS -->
+                <section class="panel">
+
+                    <h2>Manage Jobs</h2>
+
+                    <p class="muted">
+                        View and manage your active, paused,
+                        filled and closed job postings.
+                    </p>
+
+                    <a
+                        href="post-job.html"
+                        class="btn outline">
+                        Manage Jobs
+                    </a>
+
+                </section>
+
+
+                <!-- APPLICATIONS -->
+                <section class="panel">
+
+                    <h2>Applications</h2>
+
+                    <p class="muted">
+                        Review candidate applications and manage
+                        your hiring pipeline.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="btn outline">
+                        View Applications
+                    </button>
+
+                </section>
+
+
+            </div>
+
+
+            <!-- HIRING OVERVIEW -->
+            <section class="panel" style="margin-top: 24px;">
+
+                <h2>Hiring Overview</h2>
+
+                <div class="form-grid">
+
+                    <div>
+                        <p class="muted">Active Jobs</p>
+                        <h2>0</h2>
+                    </div>
+
+                    <div>
+                        <p class="muted">Applications</p>
+                        <h2>0</h2>
+                    </div>
+
+                    <div>
+                        <p class="muted">Candidates Shortlisted</p>
+                        <h2>0</h2>
+                    </div>
+
+                    <div>
+                        <p class="muted">Positions to Fill</p>
+                        <h2>0</h2>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+    <div id="siteFooter"></div>
+
+
+    <script src="../main.js"></script>
+
+    <script>
+
+        /* Employer authentication */
+
+        if (localStorage.getItem("loggedIn") !== "true") {
+
+            window.location.href = "../login.html";
+
+        }
+
+
+        if (localStorage.getItem("userRole") !== "employer") {
+
+            window.location.href = "../index.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
