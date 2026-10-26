@@ -1,5 +1,9 @@
 package com.ascendingcloud.staffing.repository;
 
-public class ConversationRepository {
-    
+import com.ascendingcloud.staffing.entity.Conversation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ConversationRepository extends JpaRepository<Conversation, Integer> {
 }

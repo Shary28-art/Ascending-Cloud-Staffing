@@ -1,8 +1,11 @@
 package com.ascendingcloud.staffing.service;
 
 import com.ascendingcloud.staffing.entity.EmploymentType;
+import com.ascendingcloud.staffing.exception.BadRequestException;
+import com.ascendingcloud.staffing.exception.ResourceNotFoundException;
 import com.ascendingcloud.staffing.repository.EmploymentTypeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,36 +18,51 @@ public class EmploymentTypeService {
         this.repository = repository;
     }
 
-    public List<EmploymentType> getAll() {
+    @Transactional(readOnly = true)
+    public List<EmploymentType> getAllEmploymentTypes() {
         return repository.findAll();
     }
 
-    public EmploymentType getById(Integer id) {
+    @Transactional(readOnly = true)
+    public EmploymentType getEmploymentTypeById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Employment type not found"));
+                        new ResourceNotFoundException("Employment type not found with id: " + id));
     }
 
-    public EmploymentType create(EmploymentType employmentType) {
-        return repository.save(employmentType);
+    @Transactional
+    public EmploymentType createEmploymentType(EmploymentType entity) {
+        String name = cleanName(entity.getName());
+
+        EmploymentType created = new EmploymentType();
+        created.setName(name);
+
+        return repository.save(created);
     }
 
-    public EmploymentType update(
-            Integer id,
-            EmploymentType employmentType) {
+    @Transactional
+    public EmploymentType updateEmploymentType(Integer id, EmploymentType entity) {
+        EmploymentType existing = getEmploymentTypeById(id);
 
-        EmploymentType existing = getById(id);
-
-        existing.setName(employmentType.getName());
+        existing.setName(cleanName(entity.getName()));
 
         return repository.save(existing);
     }
 
-    public void delete(Integer id) {
+    @Transactional
+    public void deleteEmploymentType(Integer id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Employment type not found");
+            throw new ResourceNotFoundException("Employment type not found with id: " + id);
         }
 
         repository.deleteById(id);
+    }
+
+    private String cleanName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new BadRequestException("Employment type name is required");
+        }
+
+        return name.trim();
     }
 }

@@ -12,8 +12,8 @@ public class JobAlert {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "candidate_id", nullable = false)
-    private CandidateProfile candidate;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(length = 150)
     private String keyword;
@@ -22,17 +22,28 @@ public class JobAlert {
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cloud_platform_id")
-    private CloudPlatform cloudPlatform;
+    @JoinColumn(name = "job_category_id")
+    private JobCategory jobCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employment_type_id")
     private EmploymentType employmentType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "experience_level_id")
+    private ExperienceLevel experienceLevel;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public JobAlert() {
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
     public Integer getId() {
@@ -43,12 +54,12 @@ public class JobAlert {
         this.id = id;
     }
 
-    public CandidateProfile getCandidate() {
-        return candidate;
+    public User getUser() {
+        return user;
     }
 
-    public void setCandidate(CandidateProfile candidate) {
-        this.candidate = candidate;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getKeyword() {
@@ -67,12 +78,12 @@ public class JobAlert {
         this.location = location;
     }
 
-    public CloudPlatform getCloudPlatform() {
-        return cloudPlatform;
+    public JobCategory getJobCategory() {
+        return jobCategory;
     }
 
-    public void setCloudPlatform(CloudPlatform cloudPlatform) {
-        this.cloudPlatform = cloudPlatform;
+    public void setJobCategory(JobCategory jobCategory) {
+        this.jobCategory = jobCategory;
     }
 
     public EmploymentType getEmploymentType() {
@@ -83,11 +94,19 @@ public class JobAlert {
         this.employmentType = employmentType;
     }
 
+    public ExperienceLevel getExperienceLevel() {
+        return experienceLevel;
+    }
+
+    public void setExperienceLevel(ExperienceLevel experienceLevel) {
+        this.experienceLevel = experienceLevel;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreaUserAdminRoleId.javatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 }
